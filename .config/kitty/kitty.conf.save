@@ -1155,7 +1155,7 @@
 #: platform implements it, so use with care. Currently supported on
 #: macOS and KDE under X11.
 
-# background_image none
+background_image "/home/polvos-magicos/dotfiles/assets/wallpapers/Shinji and Kaworu - cropped.jpg"
 
 #: Path to a background image. Must be in PNG format.
 
