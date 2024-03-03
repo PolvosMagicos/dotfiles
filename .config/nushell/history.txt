@@ -466,3 +466,14 @@ $(brew --prefix)/opt/fzf/install
 cdi
 cd dotfiles/
 nvim
+lazygit 
+ls
+ls -a
+cd .config/
+ls
+laz
+lazygit 
+cd ..
+git rm --cached yourfolder
+git rm --cached .config/nvim
+ls
