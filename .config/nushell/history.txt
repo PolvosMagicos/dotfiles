@@ -477,3 +477,65 @@ cd ..
 git rm --cached yourfolder
 git rm --cached .config/nvim
 ls
+lazygit 
+sudo dnf install php
+mkdir programming
+cd programming/
+composer require giansalex/peru-consult
+mkdir consulta-dni
+cd consulta-dni/
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"<\n>php -r "if (hash_file('sha384', 'composer-setup.php') === 'dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"<\n>php composer-setup.php<\n>php -r "unlink('composer-setup.php');"
+composer require giansalex/peru-consult<\n>
+composer require giansalex/peru-consult
+bash
+sudo dnf install composer
+composer require giansalex/peru-consult
+ls
+cd vendor/
+ls
+./autoload.php
+php autoload.php
+nvim
+cd ../../..
+cd programming/
+rmdir consulta-dni/
+sudo rmdir consultda-dni
+git clone https://github.com/giansalex/peru-consult-api.git<\n>cd peru-consult-api<\n>composer install<\n>php -S 0.0.0.0:8080 -t public
+sudo dnf install symfony
+sudo dnf install symfony-cli
+curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.rpm.sh' | sudo -E bash<\n><\n>sudo dnf install symfony-cli
+sudo dnf install postman
+flatpak install flathub com.getpostman.Postman
+flatpak run com.getpostman.Postman
+bash
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak run com.getpostman.Postman
+flatpak install flathub com.getpostman.Postman
+flatpak run com.getpostman.Postman
+php -S 0.0.0.0:8080 -t public
+curl -H "Accept: application/json" http://localhost:8080/api/v1/dni/48004836?token=abcxyz
+php -S 0.0.0.0:8080 -t public
+sudo dnf install docker
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo dnf -y install dnf-plugins-core<\n>sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+bash
+nvim
+sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+cd programming/
+docker run -d -p 8080:8080 --name peru-consult -e API_TOKEN=abcxyz giansalex/peru-consult-api
+cd
+sudo systemctl start docker
+sudo docker run hello-world
+docker run -d -p 8080:8080 --name peru-consult -e API_TOKEN=abcxyz giansalex/peru-consult-api
+docker run -d -p 8080:8080 --name peru-consult -e API_TOKEN=your_key giansalex/peru-consult-api
+curl -H "Accept: application/json" http://localhost:8080/api/v1/dni/48004836?token=abcxyz
+bash
+curl -H "Accept: application/json" http://localhost:8080/api/v1/dni/48004836?token=abcxyz
+php -S 0.0.0.0:8080 -t public
+composer install<\n>php -S 0.0.0.0:8080 -t public
+git clone git@github.com:PolvosMagicos/firefox-customization.git
+cd firefox-customization/
+ls
+cd
+cd dotfiles/
+lazygit 
