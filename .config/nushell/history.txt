@@ -539,3 +539,105 @@ ls
 cd
 cd dotfiles/
 lazygit 
+nvim
+cd
+flatpak uninstall com.getpostman.Postman
+dnf list installed
+table dnf list installed
+dnf list installed table
+flatpak list
+flatpak list --app
+sudo dnf install zoom_x86_64.rpm
+rm zoom_x86_64.rpm
+ls
+cd
+node -v
+npm create vite@latest
+mkdir note-taker
+cd note-taker/
+npm create vite@latest
+cd frontend/
+npm install
+cd note-taker/frontend/
+cd ..
+git clone git@github.com:ensolvers-github-challenges/SebastianMonzonArguelles-a212d4.git
+ls
+cd SebastianMonzonArguelles-a212d4/
+tree
+git branch
+git -h
+git switch invalid-branch
+tree
+help
+help cat
+help cut
+help commands
+mv backend/ ../note-taker/
+ls
+cd ../note-taker/
+ls
+sudo dnf install waydroid
+sudo waydroid container start
+waydroid session stop
+sudo waydroid container start
+waydroid session stop<\n>sudo waydroid container stop
+sudo waydroid container start
+waydroid session stop<\n>sudo waydroid container stop
+sudo dnf remove waydroid
+sudo rm -rf /var/lib/waydroid /home/.waydroid ~/waydroid ~/.share/waydroid ~/.local/share/applications/*aydroid* ~/.local/share/waydroid
+sudo dnf install waydroid
+sudo waydroid shell
+btop
+waydroid session stop
+sudo waydroid shell
+waydroid session stop
+cd nim
+cd nvim
+nvim
+btop
+cd
+waydroid session stop
+btop
+cd programming/
+ls
+cd note-taker/
+cp frontend/ ../SebastianMonzonArguelles-a212d4/
+cd frontend/ ../SebastianMonzonArguelles-a212d4/
+cp frontend/ ../SebastianMonzonArguelles-a212d4/
+cp frontend/ ../SebastianMonzonArguelles-a212d4/ --recursive
+ls
+cd ../SebastianMonzonArguelles-a212d4/
+lsd
+ls
+cd ..
+cd ../..
+cd ..
+ls
+cd
+cd programming/
+git clone git@github.com:ensolvers-github-challenges/SebastianMonzonArguelles-a212d4.git
+cd SebastianMonzonArguelles-a212d4/
+lazygit 
+ls
+lazygit 
+ls
+cp backend/ & frontend/ ../note-taker/
+cd ../note-taker/
+rmdir backend/ & frontend/
+rmdir backend/
+sudo rmdir backend/
+rm -r backend/
+rm -r frontend/
+cp ../SebastianMonzonArguelles-a212d4/backend/ 
+cp ../SebastianMonzonArguelles-a212d4/backend/ /
+cp ../SebastianMonzonArguelles-a212d4/backend/ / --recursive
+cd ../SebastianMonzonArguelles-a212d4/
+cp frontend/ ../note-taker/
+cp frontend/ ../note-taker/ --recursive
+cp backend/ ../note-taker/ --recursive
+cd ../note-taker/
+ls
+nvim
+cd frontend/
+npm i
+cd dot
