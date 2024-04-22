@@ -101,6 +101,8 @@ $env.NU_PLUGIN_DIRS = [
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/polvos-magicos/')
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/polvos-magicos/.cargo/bin')
 $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/linuxbrew/.linuxbrew/bin')
+$env.PATH = ($env.PATH | split row (char esep) | prepend '/home/Android/Sdk/emulator')
+$env.PATH = ($env.PATH | split row (char esep) | prepend '/home/Android/Sdk/platform-tools')
 
 # link zoxide to cd command
 zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
