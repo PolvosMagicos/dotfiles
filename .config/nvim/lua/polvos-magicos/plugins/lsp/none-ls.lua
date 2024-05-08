@@ -14,7 +14,7 @@ return {
 				null_ls.builtins.formatting.clang_format,
 
 				-- linters
-				null_ls.builtins.diagnostics.eslint,
+				-- null_ls.builtins.diagnostics.eslint,
 
 				-- completion
 			},
