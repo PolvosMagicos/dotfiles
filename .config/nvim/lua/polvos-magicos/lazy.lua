@@ -13,6 +13,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   { import = "polvos-magicos.plugins" },
-	{ import = "polvos-magicos.plugins.lsp" },
-	{ import = "polvos-magicos.colorscheme" },
+  { import = "polvos-magicos.plugins.lsp" },
+  { import = "polvos-magicos.colorscheme" },
 })

@@ -48,6 +48,9 @@ return {
 		lspconfig.clangd.setup({
 			capabilities = capabilities,
 		})
+		lspconfig.pylsp.setup({
+			capabilities = capabilities,
+		})
 
 		--[[ -- Needs to run this to fix ERROR: "npm -g i eslint-cli"
 		lspconfig.eslint.setup({

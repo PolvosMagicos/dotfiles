@@ -11,11 +11,15 @@ return {
 		vim.keymap.set("n", "<leader>bf", ":Neotree buffers reveal float<CR>", {})
 
 		require("neo-tree").setup({
+			window = {
+				position = "top",
+				width = 40,
+			},
 			filesystem = {
 				filtered_items = {
-					visible = true, -- This is what you want: If you set this to `true`, all "hide" just mean "dimmed out"
+					visible = true, -- This makes hidden items visible
 					hide_dotfiles = false,
-					hide_gitignored = true,
+					hide_gitignored = false,
 				},
 			},
 		})
