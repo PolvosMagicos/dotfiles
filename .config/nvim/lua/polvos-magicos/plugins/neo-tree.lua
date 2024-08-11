@@ -12,7 +12,7 @@ return {
 
 		require("neo-tree").setup({
 			window = {
-				position = "top",
+				position = "right",
 				width = 40,
 			},
 			filesystem = {
