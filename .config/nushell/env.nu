@@ -100,17 +100,40 @@ $env.NU_PLUGIN_DIRS = [
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/polvos-magicos/')
 
+
 # Add the following directories to the PATH
 $env.PATH = (
   $env.PATH
     | split row (char esep)
     | append /usr/local/bin
+    # cargo
     | append /home/polvos-magicos/.cargo/bin
+    # linuxbrew
     | append /home/linuxbrew/.linuxbrew/bin
+    # android studio
     | append /home/Android/Sdk/emulator
     | append /home/Android/Sdk/platform-tools
+    # flutter
     | append /usr/bin/flutter/bin
+    # fnm
+    | append /home/polvos-magicos/.fnm
     | uniq # filter so the paths are unique
+)
+
+# Load env for fnm and add to PATH
+load-env (fnm env --shell bash
+    | lines
+    | str replace 'export ' ''
+    | str replace -a '"' ''
+    | split column =
+    | rename name value
+    | where name != "FNM_ARCH" and name != "PATH"
+    | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
+)
+
+$env.PATH = ($env.PATH
+    | split row (char esep)
+    | prepend $"($env.FNM_MULTISHELL_PATH)/bin"
 )
 
 # Old way to append to PATH
@@ -118,6 +141,7 @@ $env.PATH = (
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/linuxbrew/.linuxbrew/bin')
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/Android/Sdk/emulator')
 # $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/Android/Sdk/platform-tools')
+
 
 # link zoxide to cd command
 zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
