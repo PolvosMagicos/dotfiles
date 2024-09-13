@@ -25,13 +25,13 @@ return {
 			end
 		end
 
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-		vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
-		vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, {})
-		vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Get hover" })
+		vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Get definition" })
+		vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, { desc = "Get references" })
+		vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Get code actions" })
 		vim.keymap.set("n", "<leader>lh", function()
 			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-		end, {})
+		end, { desc = "Toggle inlay hints" })
 
 		lspconfig.lua_ls.setup({
 			capabilities = capabilities,
