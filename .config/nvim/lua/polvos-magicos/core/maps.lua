@@ -24,27 +24,44 @@ map("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to n
 map("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
 map("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
 
-
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Dismiss Noice Message                           ║
 -- ╚═════════════════════════════════════════════════╝
 
-map("n", "<leader>nd", "<cmd>NoiceDismiss<CR>", {desc = "Dismiss Noice Message"})
+map("n", "<leader>nd", "<cmd>NoiceDismiss<CR>", { desc = "Dismiss Noice Message" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Telescope                                       ║
 -- ╚═════════════════════════════════════════════════╝
 
-map('n', '<leader>ff', "<cmd>lua require('telescope.builtin').find_files()<cr>", { desc = "Find Files"})
-map('n', '<leader>fg', "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>", { desc = "Live Grep"})
-map('n', '<leader>fc', '<cmd>lua require("telescope.builtin").live_grep({ glob_pattern = "!{spec,test}"})<CR>', { desc = "Live Grep Code"})
-map('n', '<leader>fb', "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Find Buffers"})
-map('n', '<leader>fh', "<cmd>lua require('telescope.builtin').help_tags()<cr>", { desc = "Find Help Tags"})
-map('n', '<leader>fs', "<cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>", { desc = "Find Symbols"})
-map('n', '<leader>fo', "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Find Old Files"})
-map('n', '<leader>fw', "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "Find Word under Cursor"})
-map('n', '<leader>gc', "<cmd>lua require('telescope.builtin').git_commits()<cr>", { desc = "Search Git Commits"})
-map('n', '<leader>gb', "<cmd>lua require('telescope.builtin').git_bcommits()<cr>", { desc = "Search Git Commits for Buffer"})
+map("n", "<leader>ff", "<cmd>lua require('telescope.builtin').find_files()<cr>", { desc = "Find Files" })
+map(
+	"n",
+	"<leader>fg",
+	"<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",
+	{ desc = "Live Grep" }
+)
+map(
+	"n",
+	"<leader>fc",
+	'<cmd>lua require("telescope.builtin").live_grep({ glob_pattern = "!{spec,test}"})<CR>',
+	{ desc = "Live Grep Code" }
+)
+map("n", "<leader>fb", "<cmd>lua require('telescope.builtin').buffers()<cr>", { desc = "Find Buffers" })
+-- map("n", "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<cr>", { desc = "Find Help Tags" })
+map("n", "<leader>fs", "<cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>", { desc = "Find Symbols" })
+map("n", "<leader>fo", "<cmd>lua require('telescope.builtin').oldfiles()<cr>", { desc = "Find Old Files" })
+map("n", "<leader>fw", "<cmd>lua require('telescope.builtin').grep_string()<cr>", { desc = "Find Word under Cursor" })
+map("n", "<leader>gc", "<cmd>lua require('telescope.builtin').git_commits()<cr>", { desc = "Search Git Commits" })
+map(
+	"n",
+	"<leader>gb",
+	"<cmd>lua require('telescope.builtin').git_bcommits()<cr>",
+	{ desc = "Search Git Commits for Buffer" }
+)
+map("n", "<leader>fh", function()
+	require("telescope.builtin").find_files({ hidden = true, no_ignore = true })
+end, { desc = "Find Hidden Files" })
 
 -- ╔═════════════════════════════════════════════════╗
 -- ║ Snippets                                        ║
