@@ -1,29 +1,17 @@
 # Nushell Environment Config File
 #
-# version = "0.90.1"
+# version = "0.98.0"
 
 def create_left_prompt [] {
-    let home =  $nu.home-path
-
-    # Perform tilde substitution on dir
-    # To determine if the prefix of the path matches the home dir, we split the current path into
-    # segments, and compare those with the segments of the home dir. In cases where the current dir
-    # is a parent of the home dir (e.g. `/home`, homedir is `/home/user`), this comparison will
-    # also evaluate to true. Inside the condition, we attempt to str replace `$home` with `~`.
-    # Inside the condition, either:
-    # 1. The home prefix will be replaced
-    # 2. The current dir is a parent of the home dir, so it will be uneffected by the str replace
-    let dir = (
-        if ($env.PWD | path split | zip ($home | path split) | all { $in.0 == $in.1 }) {
-            ($env.PWD | str replace $home "~")
-        } else {
-            $env.PWD
-        }
-    )
+    let dir = match (do --ignore-shell-errors { $env.PWD | path relative-to $nu.home-path }) {
+        null => $env.PWD
+        '' => '~'
+        $relative_pwd => ([~ $relative_pwd] | path join)
+    }
 
     let path_color = (if (is-admin) { ansi red_bold } else { ansi green_bold })
     let separator_color = (if (is-admin) { ansi light_red_bold } else { ansi light_green_bold })
-    let path_segment = $"($path_color)($dir)"
+    let path_segment = $"($path_color)($dir)(ansi reset)"
 
     $path_segment | str replace --all (char path_sep) $"($separator_color)(char path_sep)($path_color)"
 }
@@ -33,7 +21,7 @@ def create_right_prompt [] {
     let time_segment = ([
         (ansi reset)
         (ansi magenta)
-        (date now | format date '%x %X %p') # try to respect user's locale
+        (date now | format date '%x %X') # try to respect user's locale
     ] | str join | str replace --regex --all "([/:])" $"(ansi green)${1}(ansi magenta)" |
         str replace --regex --all "([AP]M)" $"(ansi magenta_underline)${1}")
 
@@ -89,6 +77,7 @@ $env.ENV_CONVERSIONS = {
 # The default for this is $nu.default-config-dir/scripts
 $env.NU_LIB_DIRS = [
     ($nu.default-config-dir | path join 'scripts') # add <nushell-config-dir>/scripts
+    ($nu.data-dir | path join 'completions') # default home for nushell completions
 ]
 
 # Directories to search for plugin binaries when calling register
@@ -98,51 +87,37 @@ $env.NU_PLUGIN_DIRS = [
 ]
 
 # To add entries to PATH (on Windows you might use Path), you can use the following pattern:
-# $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/polvos-magicos/')
-
+# $env.PATH = ($env.PATH | split row (char esep) | prepend '/some/path')
+# An alternate way to add entries to $env.PATH is to use the custom command `path add`
+# which is built into the nushell stdlib:
+# use std "path add"
+# $env.PATH = ($env.PATH | split row (char esep))
+# path add /some/path
+# path add ($env.CARGO_HOME | path join "bin")
+# path add ($env.HOME | path join ".local" "bin")
+# $env.PATH = ($env.PATH | uniq)
 
 # Add the following directories to the PATH
 $env.PATH = (
   $env.PATH
     | split row (char esep)
-    | append /usr/local/bin
+    | prepend /usr/local/bin
     # cargo
-    | append /home/polvos-magicos/.cargo/bin
+    | prepend /home/polvos-magicos/.cargo/bin
     # linuxbrew
-    | append /home/linuxbrew/.linuxbrew/bin
+    | prepend /home/linuxbrew/.linuxbrew/bin
     # android studio
-    | append /home/Android/Sdk/emulator
-    | append /home/Android/Sdk/platform-tools
+    | prepend /home/Android/Sdk/emulator
+    | prepend /home/Android/Sdk/platform-tools
     # flutter
-    | append /usr/bin/flutter/bin
+    | prepend /usr/bin/flutter/bin
     # fnm
-    | append /home/polvos-magicos/.fnm
+    | prepend /home/polvos-magicos/.fnm
     | uniq # filter so the paths are unique
 )
-
-# Load env for fnm and add to PATH
-load-env (fnm env --shell bash
-    | lines
-    | str replace 'export ' ''
-    | str replace -a '"' ''
-    | split column =
-    | rename name value
-    | where name != "FNM_ARCH" and name != "PATH"
-    | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
-)
-
-$env.PATH = ($env.PATH
-    | split row (char esep)
-    | prepend $"($env.FNM_MULTISHELL_PATH)/bin"
-)
-
-# Old way to append to PATH
-# $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/polvos-magicos/.cargo/bin')
-# $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/linuxbrew/.linuxbrew/bin')
-# $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/Android/Sdk/emulator')
-# $env.PATH = ($env.PATH | split row (char esep) | prepend '/home/Android/Sdk/platform-tools')
-
 
 # link zoxide to cd command
 zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
 
+# To load from a custom file you can use:
+# source ($nu.default-config-dir | path join 'custom.nu')
