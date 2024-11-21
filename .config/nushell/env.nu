@@ -115,16 +115,16 @@ $env.PATH = (
     | split row (char esep)
     | prepend /usr/local/bin
     # cargo
-    | prepend /home/polvos-magicos/.cargo/bin
+    | prepend ("/home/" + $env.USER + "/.cargo/bin")
     # linuxbrew
     | prepend /home/linuxbrew/.linuxbrew/bin
     # android studio
     | prepend /home/Android/Sdk/emulator
     | prepend /home/Android/Sdk/platform-tools
     # flutter
-    | prepend /usr/bin/flutter/bin
+    | prepend ("/home/" + $env.USER + "/flutter/bin")
     # fnm
-    | prepend /home/polvos-magicos/.fnm
+    | prepend ("/home/" + $env.USER + "/.fnm")
     | uniq # filter so the paths are unique
 )
 
