@@ -897,4 +897,6 @@ $env.config = {
     ]
 }
 
+# zoxide
 source ~/.zoxide.nu
+

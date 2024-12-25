@@ -123,8 +123,10 @@ $env.PATH = (
     | prepend /home/Android/Sdk/platform-tools
     # flutter
     | prepend ("/home/" + $env.USER + "/flutter/bin")
-    # fnm
+    # fnm (fast node manager)
     | prepend ("/home/" + $env.USER + "/.fnm")
+    # fvm (flutter version manager)
+    | prepend ("/usr/local/bin/fvm")
     | uniq # filter so the paths are unique
 )
 
