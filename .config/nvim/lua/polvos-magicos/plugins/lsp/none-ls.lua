@@ -28,7 +28,7 @@ return {
             group = augroup,
             buffer = buffer,
             callback = function()
-              vim.lsp.buf.format()
+              vim.lsp.buf.format({ bufnr = buffer })
             end,
           })
         end
