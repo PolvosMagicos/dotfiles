@@ -27,4 +27,34 @@ M.toggle_lazygit = function()
 	lazygit:toggle()
 end
 
+M.on_attach = function(client, bufnr)
+	local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+	-- Set up keymaps (shared across all servers)
+	local opts = { noremap = true, silent = true, buffer = bufnr }
+	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+	vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts)
+	vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
+	vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+	vim.keymap.set("n", "<leader>lh", function()
+		vim.lsp.inlay_hint(bufnr, not vim.lsp.inlay_hint.is_enabled(bufnr))
+	end, opts)
+
+	-- Enable formatting on save (if supported by the server)
+	if client.supports_method("textDocument/formatting") then
+		-- Clear existing autocommands for this buffer
+		vim.api.nvim_clear_autocmds({
+			group = augroup,
+			buffer = bufnr,
+		})
+		-- Add a new autocommand for formatting on save
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = augroup,
+			buffer = bufnr,
+			callback = function()
+				vim.lsp.buf.format({ bufnr = bufnr })
+			end,
+		})
+	end
+end
+
 return M
