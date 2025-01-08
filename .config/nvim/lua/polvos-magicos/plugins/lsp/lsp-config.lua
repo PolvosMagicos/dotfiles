@@ -13,13 +13,12 @@ return {
 
 		local protocol = require("vim.lsp.protocol")
 
-		local on_attach = on_attach
-
 		lspconfig.lua_ls.setup({
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})
-		lspconfig.tsserver.setup({
+		lspconfig.ts_ls.setup({
+			filetypes = { "javascript", "javascriptreact", "javascript.jsx" },
 			capabilities = capabilities,
 			on_attach = on_attach,
 		})

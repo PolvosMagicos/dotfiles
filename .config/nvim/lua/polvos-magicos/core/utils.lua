@@ -28,7 +28,7 @@ M.toggle_lazygit = function()
 end
 
 M.on_attach = function(client, bufnr)
-	local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+	local augroup = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
 	-- Set up keymaps (shared across all servers)
 	local opts = { noremap = true, silent = true, buffer = bufnr }
 	vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
