@@ -130,6 +130,11 @@ $env.PATH = (
     | uniq # filter so the paths are unique
 )
 
+
+# Use nvim as default editor
+$env.EDITOR = "nvim"
+$env.VISUAL = "nvim"
+
 # link zoxide to cd command
 zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
 
