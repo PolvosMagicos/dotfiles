@@ -131,8 +131,8 @@ $env.PATH = (
     # linuxbrew
     | prepend /home/linuxbrew/.linuxbrew/bin
     # android studio
-    | prepend /home/Android/Sdk/emulator
-    | prepend /home/Android/Sdk/platform-tools
+    | prepend ("/home/" + $env.USER + "/Android/Sdk/emulator")
+    | prepend ("/home/" + $env.USER + "/Android/Sdk/platform-tools")
     # flutter
     | prepend ("/home/" + $env.USER + "/flutter/bin")
     # fnm (fast node manager)
