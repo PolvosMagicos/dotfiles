@@ -51,19 +51,30 @@ vim.g.rustfmt_autosave = 1
 
 -- Function to show errors in floating window
 
+-- vim.diagnostic.config({
+--   virtual_text = false,
+--   signs = true,
+--   float = { border = "single" },
+-- })
+
+-- Configure diagnostics
 vim.diagnostic.config({
-  virtual_text = false,
-  signs = true,
-  float = { border = "single" },
+  virtual_text = false, -- Disable inline diagnostics
+  signs = true,        -- Show signs in gutter
+  underline = true,    -- Underline problematic code
+  update_in_insert = false,
+  severity_sort = true,
+  float = {
+    border = "rounded",
+    focusable = true, -- Allow focusing the float window
+    source = true,  -- Show diagnostic source
+  },
 })
 
--- lua version
+-- Show diagnostics on CursorHold
 vim.api.nvim_create_autocmd("CursorHold", {
   pattern = "*",
   callback = function()
-    vim.diagnostic.open_float(0, { scope = "cursor" })
+    vim.diagnostic.open_float({ scope = "cursor" })
   end,
 })
-
--- cmd version
--- vim.cmd([[au CursorHold * lua vim.diagnostic.open_float(0,{scope = "cursor"})]])
