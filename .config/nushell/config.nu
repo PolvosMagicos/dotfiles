@@ -61,3 +61,6 @@ $env.VISUAL = "nvim"
 
 # link zoxide to cd command
 zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
+
+# sudo alias
+alias pls = sudo
