@@ -59,22 +59,8 @@ vim.g.rustfmt_autosave = 1
 
 -- Configure diagnostics
 vim.diagnostic.config({
-  virtual_text = false, -- Disable inline diagnostics
+  virtual_lines = true,
   signs = true,        -- Show signs in gutter
-  underline = true,    -- Underline problematic code
   update_in_insert = false,
   severity_sort = true,
-  float = {
-    border = "rounded",
-    focusable = true, -- Allow focusing the float window
-    source = true,  -- Show diagnostic source
-  },
-})
-
--- Show diagnostics on CursorHold
-vim.api.nvim_create_autocmd("CursorHold", {
-  pattern = "*",
-  callback = function()
-    vim.diagnostic.open_float({ scope = "cursor" })
-  end,
 })
