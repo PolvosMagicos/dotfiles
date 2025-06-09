@@ -11,7 +11,6 @@ return {
     event = { "BufRead Cargo.toml" },
     tag = "stable",
     config = function()
-      local on_attach = require("polvos-magicos.core.utils").on_attach()
       require("crates").setup({
         smart_insert = true,
         insert_closing_quote = true,
@@ -28,7 +27,6 @@ return {
         open_programs = { "xdg-open", "open" },
         expand_crate_moves_cursor = true,
         enable_update_available_warning = true,
-        on_attach = on_attach,
         text = {
           searching = "   Searching",
           loading = "   Loading",
