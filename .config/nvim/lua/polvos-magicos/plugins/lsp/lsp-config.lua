@@ -1,59 +1,30 @@
 return {
-	"neovim/nvim-lspconfig",
-	dependencies = {
-		{ "j-hui/fidget.nvim", opts = {} },
-		"saghen/blink.cmp",
-	},
-	lazy = false,
-	config = function()
-		local capabilities = require("blink.cmp").get_lsp_capabilities()
-		local on_attach = require("polvos-magicos.core.utils").on_attach
+  { "j-hui/fidget.nvim", opts = {} },
+  "saghen/blink.cmp",
+  {
+    name = "builtin-lsp",
+    dir = vim.fn.stdpath("config"),
+    config = function()
+      local capabilities = require("blink.cmp").get_lsp_capabilities()
+      local on_attach = require("polvos-magicos.core.utils").on_attach
 
-		local servers = {
-			lua_ls = {
-				on_attach = on_attach,
-				capabilities = capabilities,
-				settings = {
-					Lua = {
-						runtime = { version = "LuaJIT" },
-						diagnostics = {
-							enable = true,
-							globals = { "vim" },
-						},
-						workspace = {
-							library = vim.api.nvim_get_runtime_file("", true),
-							checkThirdParty = false,
-						},
-						telemetry = { enable = false },
-						completion = { callSnippet = "Replace" },
-					},
-				},
-			},
-			html = {
-				on_attach = on_attach,
-				capabilities = capabilities,
-			},
-			tailwindcss = {
-				on_attach = on_attach,
-				capabilities = capabilities,
-			},
-			clangd = {
-				on_attach = on_attach,
-				capabilities = capabilities,
-			},
-			pylsp = {
-				on_attach = on_attach,
-				capabilities = capabilities,
-			},
-			marksman = {
-				on_attach = on_attach,
-				capabilities = capabilities,
-			},
-		}
+      local servers = {}
+      local server_dir = vim.fn.stdpath("config") .. "/lua/polvos-magicos/plugins/lsp/servers/"
 
-		-- Setup each server
-		for server_name, config in pairs(servers) do
-			require("lspconfig")[server_name].setup(config)
-		end
-	end,
+      -- This function find all config files for lsp's and load their config (commented config at /servers/lua-ls.lua)
+      for _, file in ipairs(vim.fn.readdir(server_dir)) do
+        if file:match("%.lua$") then
+          local name = file:gsub("%.lua$", "")
+          local server = require("polvos-magicos.plugins.lsp.servers." .. name)
+          vim.lsp.config[server.name] = vim.tbl_extend("force", server.config, {
+            on_attach = on_attach,
+            capabilities = capabilities,
+          })
+          table.insert(servers, server.name)
+        end
+      end
+
+      vim.lsp.enable(servers)
+    end,
+  },
 }
