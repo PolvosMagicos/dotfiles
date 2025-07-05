@@ -16,3 +16,9 @@
 #
 # You can remove these comments if you want or leave
 # them for future reference.
+source ~/.config/nushell/banner.nu
+
+$env.config.show_banner = false
+
+# load banner
+welcome
