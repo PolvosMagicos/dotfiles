@@ -1,5 +1,5 @@
 def welcome [] {
-  let image_path = "PATH TO IMAGE"
+  let image_path = $"($env.HOME)/dotfiles/assets/profile-pictures/Asuka.png"
 
   # Gather info
   let ver = (version)
@@ -19,22 +19,25 @@ def welcome [] {
 
   # Image + Text Layout
   if ($image_path | path exists) {
-    run-external kitty '+kitten' 'icat' '--align=left' '--scale-up' '--place=40x14@0x0' $image_path
+    run-external kitty '+kitten' 'icat' '--align=left' '--stdin=no' '--silent' '--scale-up' '--place=40x14@5x2' $image_path
+
+    print "\u{1b}[2A"
 
     echo $"
-                                 (ansi green_bold)Welcome, Minion 👾(ansi reset)
-                                 ───────────────────────────────
-                                 (ansi green)User:      (ansi purple)($user)
-                                 (ansi green)Host:      (ansi purple)($hostname)
-                                 (ansi green)OS:        (ansi purple)($os_name)
-                                 (ansi green)Version:   (ansi purple)($os_ver)
-                                 (ansi green)Kernel:    (ansi purple)($kernel)
-                                 (ansi green)Uptime:    (ansi purple)($uptime)
-                                 (ansi green)Memory:    (ansi purple)($mem_used) / ($mem_total)
-                                 (ansi green)Terminal:  (ansi purple)($term)
-                                 (ansi green)Shell:     (ansi purple)Nushell ($ver.version)
-                                 (ansi green)Time:      (ansi purple)($now)
-                                 (ansi green)Startup:   (ansi purple)($startup)(ansi reset)
+                                     (ansi green_bold)Welcome, Minion 👾(ansi reset)
+                                     ───────────────────────────────
+                                     (ansi green)User:      (ansi purple)($user)
+                                     (ansi green)Host:      (ansi purple)($hostname)
+                                     (ansi green)OS:        (ansi purple)($os_name)
+                                     (ansi green)Version:   (ansi purple)($os_ver)
+                                     (ansi green)Kernel:    (ansi purple)($kernel)
+                                     (ansi green)Uptime:    (ansi purple)($uptime)
+                                     (ansi green)Memory:    (ansi purple)($mem_used) / ($mem_total)
+                                     (ansi green)Terminal:  (ansi purple)($term)
+                                     (ansi green)Shell:     (ansi purple)Nushell ($ver.version)
+                                     (ansi green)Time:      (ansi purple)($now)
+                                     (ansi green)Startup:   (ansi purple)($startup)(ansi reset)
+
     "
   } else {
     echo $"
