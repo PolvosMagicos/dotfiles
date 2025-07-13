@@ -23,8 +23,8 @@ return {
 				ensure_installed = {
 					"lua_ls", -- Lua
 					"clangd", -- C/C++
-					"jdtls", -- Java
-					"pylsp", -- Python
+					"jdtls",  -- Java
+					"basedpyright", -- Python / needs to run pip install basedpyright
 					"tailwindcss", -- Tailwind CSS
 					"html", -- HTML
 					"marksman", -- Markdown
