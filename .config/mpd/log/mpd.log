@@ -1,0 +1,2 @@
+2025-07-14T20:15:30 exception: Failed to open "/home/minion/.config/mpd/state/mpd.state": No such file or directory
+2025-07-14T20:15:40 mixer: Failed to read mixer for "default detected output": no such mixer control: PCM
