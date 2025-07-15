@@ -1,7 +1,7 @@
 # Nushell
 .config/nushell/history.txt
 
-# MPD
+# MPD auto-generated files
 .config/mpd/database
 .config/mpd/log
 .config/mpd/pid
