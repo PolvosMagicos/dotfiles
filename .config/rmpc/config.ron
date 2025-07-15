@@ -8,7 +8,7 @@
     cache_dir: Some("/tmp/rmpc/cache"),
     on_song_change: None,
     volume_step: 5,
-    max_fps: 30,
+    max_fps: 60,
     scrolloff: 0,
     wrap_navigation: false,
     enable_mouse: true,
@@ -125,7 +125,14 @@
             name: "Queue",
             pane: Split(
                 direction: Horizontal,
-                panes: [(size: "40%", pane: Pane(AlbumArt)), (size: "60%", pane: Pane(Queue))],
+                panes: [(size: "40%", pane: Pane(AlbumArt)),
+                        (size: "60%", pane: Split(
+                          direction: Vertical,
+                          panes: [
+                              (size: "50%", pane: Pane(Queue)),
+                              (size: "50%", pane: Pane(Cava)),
+                          ],
+            )),],
             ),
         ),
         (
@@ -153,5 +160,29 @@
             pane: Pane(Search),
         ),
     ],
+    cava: (
+        framerate: 60,
+        autosens: true,
+        sensitivity: 100,
+        input: (
+            method: Fifo,
+            source: "/tmp/mpd.fifo",
+            sample_rate: 44100,
+            channels: 2,
+            sample_bits: 16,
+        ),
+        smoothing: (
+            noise_reduction: 77,
+            monstercat: false,
+            waves: false,
+        ),
+        eq: [],
+        bar_symbols: ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'],
+        orientation: Bottom,
+        bar_width: 2,
+        bar_spacing: 1,
+        bg_color: "black",
+        bar_color: Single("green"),
+    ),
 )
 
