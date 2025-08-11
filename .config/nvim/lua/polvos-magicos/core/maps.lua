@@ -95,3 +95,11 @@ map("n", "]y", "<Plug>(YankyCycleForward)", { desc = "Next yank" })
 -- ║ Lazygit                                         ║
 -- ╚═════════════════════════════════════════════════╝
 map("n", "<leader>G", "<cmd>lua require('polvos-magicos.core.utils').toggle_lazygit()<cr>", { desc = "Lazygit" })
+
+-- ╔═════════════════════════════════════════════════╗
+-- ║ Colemak                                         ║
+-- ╚═════════════════════════════════════════════════╝
+map("n", "<A-Left>", "<C-w>h", { desc = "Window left" })
+map("n", "<A-Down>", "<C-w>j", { desc = "Window down" })
+map("n", "<A-Up>", "<C-w>k", { desc = "Window up" })
+map("n", "<A-Right>", "<C-w>l", { desc = "Window right" })
