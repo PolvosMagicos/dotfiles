@@ -35,6 +35,8 @@ $env.PATH = (
   $env.PATH
     | split row (char esep)
     | prepend /usr/local/bin
+    # openmpi lib
+    | prepend /usr/lib64/openmpi/bin
     # cargo
     | prepend ("/home/" + $env.USER + "/.cargo/bin")
     # linuxbrew
