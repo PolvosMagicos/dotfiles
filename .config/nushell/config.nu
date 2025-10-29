@@ -30,6 +30,17 @@ def --env y [...args] {
 	rm -fp $tmp
 }
 
+# load env from bash for fnm
+load-env (fnm env --shell bash
+    | lines
+    | str replace 'export ' ''
+    | str replace -a '"' ''
+    | split column "="
+    | rename name value
+    | where name != "FNM_ARCH" and name != "PATH"
+    | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
+)
+
 # Add the following directories to the PATH
 $env.PATH = (
   $env.PATH
@@ -47,7 +58,8 @@ $env.PATH = (
     # flutter
     | prepend ("/home/" + $env.USER + "/flutter/bin")
     # fnm (fast node manager)
-    | prepend ("/home/" + $env.USER + "/.fnm")
+    | prepend ("/home/" + $env.USER + "/.local/share/fnm")
+    | prepend $"($env.FNM_MULTISHELL_PATH)/bin"
     # fvm (flutter version manager)
     | prepend ("/usr/local/bin/fvm")
     | uniq # filter so the paths are unique
