@@ -30,6 +30,16 @@ def --env y [...args] {
 	rm -fp $tmp
 }
 
+let yarn_bins = [
+  ($nu.home-path | path join ".yarn" "bin")
+  ($nu.home-path | path join ".config" "yarn" "global" "node_modules" ".bin")
+]
+for p in $yarn_bins {
+  if not ($env.PATH | any {|e| $e == $p}) {
+    $env.PATH = ($env.PATH | prepend $p)
+  }
+}
+
 # load env from bash for fnm
 load-env (fnm env --shell bash
     | lines
@@ -45,6 +55,9 @@ load-env (fnm env --shell bash
 $env.PATH = (
   $env.PATH
     | split row (char esep)
+    # fnm (fast node manager)
+    | prepend ("/home/" + $env.USER + "/.local/share/fnm")
+    | prepend $"($env.FNM_MULTISHELL_PATH)/bin"
     | prepend /usr/local/bin
     # openmpi lib
     | prepend /usr/lib64/openmpi/bin
@@ -57,9 +70,6 @@ $env.PATH = (
     | prepend ("/home/" + $env.USER + "/Android/Sdk/platform-tools")
     # flutter
     | prepend ("/home/" + $env.USER + "/flutter/bin")
-    # fnm (fast node manager)
-    | prepend ("/home/" + $env.USER + "/.local/share/fnm")
-    | prepend $"($env.FNM_MULTISHELL_PATH)/bin"
     # fvm (flutter version manager)
     | prepend ("/usr/local/bin/fvm")
     | uniq # filter so the paths are unique
