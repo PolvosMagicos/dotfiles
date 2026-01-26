@@ -78,9 +78,16 @@ $env.PATH = (
 # Set ANDROID HOME
 $env.ANDROID_HOME = ("/home/" + $env.USER + "/Android/Sdk")
 
+# Set chromium
+$env.CHROME_EXECUTABLE = "/usr/bin/chromium-browser"
+
 # Use nvim as default editor
 $env.EDITOR = "nvim"
 $env.VISUAL = "nvim"
+
+
+alias jb = ^bash -lc "jupyter notebook"
+alias jl = ^bash -lc "jupyter lab"
 
 # link zoxide to cd command
 zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
