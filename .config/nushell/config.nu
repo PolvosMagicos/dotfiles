@@ -45,16 +45,16 @@ add_path "/usr/local/bin"
 add_path "/usr/local/sbin"
 
 # Common user bins
-add_path $"($nu.home-path)/.local/bin"
-add_path $"($nu.home-path)/bin"
+add_path ($env.HOME | path join ".local" "bin")
+add_path ($env.HOME | path join "bin")
 
 # Cargo (Rust)
-add_path $"($nu.home-path)/.cargo/bin"
+add_path ($env.HOME | path join ".cargo" "bin")
 
 # Yarn global bins (your original idea)
 let yarn_bins = [
-  ($nu.home-path | path join ".yarn" "bin")
-  ($nu.home-path | path join ".config" "yarn" "global" "node_modules" ".bin")
+  ($env.HOME | path join ".yarn" "bin")
+  ($env.HOME | path join ".config" "yarn" "global" "node_modules" ".bin")
 ]
 for p in $yarn_bins { add_path $p }
 
@@ -79,12 +79,12 @@ load-env (fnm env --shell bash
 # -------------------------
 # zoxide (cd replacement)
 # -------------------------
-# Generate zoxide init file if missing, then source it.
-let zoxide_file = ($nu.home-path | path join ".zoxide.nu")
-if not ($zoxide_file | path exists) {
-  zoxide init --cmd cd nushell | save -f $zoxide_file
-}
-source $zoxide_file
+
+zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
+
+source ~/.zoxide.nu
+
+# zoxide (generate init script)
 
 # -------------------------
 # Yazi wrapper (cd into last dir)
