@@ -16,81 +16,100 @@
 # You can remove these comments if you want or leave
 # them for future reference.
 
-# zoxide
-source ~/.zoxide.nu
+# config.nu (macOS)
+# Nushell config loaded after env.nu and before login.nu
 
-# Yazi wrapper
-def --env y [...args] {
-	let tmp = (mktemp -t "yazi-cwd.XXXXXX")
-	yazi ...$args --cwd-file $tmp
-	let cwd = (open $tmp)
-	if $cwd != "" and $cwd != $env.PWD {
-		cd $cwd
-	}
-	rm -fp $tmp
+# -------------------------
+# Helpers
+# -------------------------
+def --env add_path [p: string] {
+  if ($p | path exists) {
+    if not ($env.PATH | any {|e| $e == $p }) {
+      $env.PATH = ($env.PATH | prepend $p)
+    }
+  }
 }
 
+# -------------------------
+# PATH (macOS / Homebrew-first)
+# -------------------------
+# Start from current PATH and ensure it's a list
+$env.PATH = ($env.PATH | split row (char esep))
+
+# Homebrew (Apple Silicon)
+add_path "/opt/homebrew/bin"
+add_path "/opt/homebrew/sbin"
+
+# Homebrew (Intel fallback)
+add_path "/usr/local/bin"
+add_path "/usr/local/sbin"
+
+# Common user bins
+add_path $"($nu.home-path)/.local/bin"
+add_path $"($nu.home-path)/bin"
+
+# Cargo (Rust)
+add_path $"($nu.home-path)/.cargo/bin"
+
+# Yarn global bins (your original idea)
 let yarn_bins = [
   ($nu.home-path | path join ".yarn" "bin")
   ($nu.home-path | path join ".config" "yarn" "global" "node_modules" ".bin")
 ]
-for p in $yarn_bins {
-  if not ($env.PATH | any {|e| $e == $p}) {
-    $env.PATH = ($env.PATH | prepend $p)
+for p in $yarn_bins { add_path $p }
+
+# De-duplicate PATH
+$env.PATH = ($env.PATH | uniq)
+
+# -------------------------
+# fnm (Fast Node Manager)
+# -------------------------
+# Load fnm environment (without letting it overwrite PATH)
+# If you want fnm to manage PATH, remove the `where name != "PATH"` filter.
+load-env (fnm env --shell bash
+  | lines
+  | str replace 'export ' ''
+  | str replace -a '"' ''
+  | split column "="
+  | rename name value
+  | where name != "FNM_ARCH" and name != "PATH"
+  | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
+)
+
+# -------------------------
+# zoxide (cd replacement)
+# -------------------------
+# Generate zoxide init file if missing, then source it.
+let zoxide_file = ($nu.home-path | path join ".zoxide.nu")
+if not ($zoxide_file | path exists) {
+  zoxide init --cmd cd nushell | save -f $zoxide_file
+}
+source $zoxide_file
+
+# -------------------------
+# Yazi wrapper (cd into last dir)
+# -------------------------
+def --env y [...args] {
+  let tmp = (mktemp -t "yazi-cwd.XXXXXX")
+  yazi ...$args --cwd-file $tmp
+  let cwd = (open $tmp)
+  if $cwd != "" and $cwd != $env.PWD {
+    cd $cwd
   }
+  rm -fp $tmp
 }
 
-# load env from bash for fnm
-load-env (fnm env --shell bash
-    | lines
-    | str replace 'export ' ''
-    | str replace -a '"' ''
-    | split column "="
-    | rename name value
-    | where name != "FNM_ARCH" and name != "PATH"
-    | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
-)
-
-# Add the following directories to the PATH
-$env.PATH = (
-  $env.PATH
-    | split row (char esep)
-    # fnm (fast node manager)
-    | prepend ("/home/" + $env.USER + "/.local/share/fnm")
-    | prepend $"($env.FNM_MULTISHELL_PATH)/bin"
-    | prepend /usr/local/bin
-    # openmpi lib
-    | prepend /usr/lib64/openmpi/bin
-    # cargo
-    | prepend ("/home/" + $env.USER + "/.cargo/bin")
-    # linuxbrew
-    | prepend /home/linuxbrew/.linuxbrew/bin
-    # android studio
-    | prepend ("/home/" + $env.USER + "/Android/Sdk/emulator")
-    | prepend ("/home/" + $env.USER + "/Android/Sdk/platform-tools")
-    # flutter
-    | prepend ("/home/" + $env.USER + "/flutter/bin")
-    # fvm (flutter version manager)
-    | prepend ("/usr/local/bin/fvm")
-    | uniq # filter so the paths are unique
-)
-
-# Set ANDROID HOME
-$env.ANDROID_HOME = ("/home/" + $env.USER + "/Android/Sdk")
-
-# Set chromium
-$env.CHROME_EXECUTABLE = "/usr/bin/chromium-browser"
-
-# Use nvim as default editor
+# -------------------------
+# Editor defaults
+# -------------------------
 $env.EDITOR = "nvim"
 $env.VISUAL = "nvim"
 
+# -------------------------
+# Useful aliases
+# -------------------------
+alias pls = sudo
 
+# Jupyter (using login shell so it picks up pyenv/conda/etc if you use them)
 alias jb = ^bash -lc "jupyter notebook"
 alias jl = ^bash -lc "jupyter lab"
-
-# link zoxide to cd command
-zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
-
-# sudo alias
-alias pls = sudo
