@@ -51,6 +51,10 @@ add_path ($env.HOME | path join "bin")
 # Cargo (Rust)
 add_path ($env.HOME | path join ".cargo" "bin")
 
+# Bun
+$env.BUN_INSTALL = ($env.HOME | path join ".bun")
+add_path ($env.BUN_INSTALL | path join "bin")
+
 # Yarn global bins (your original idea)
 let yarn_bins = [
   ($env.HOME | path join ".yarn" "bin")
@@ -75,6 +79,13 @@ load-env (fnm env --shell bash
   | where name != "FNM_ARCH" and name != "PATH"
   | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
 )
+
+# Make sure fnm's active Node is on PATH
+if ($env.FNM_MULTISHELL_PATH? | is-not-empty) {
+  add_path ($env.FNM_MULTISHELL_PATH | path join "bin")
+} else {
+  print "fnm: FNM_MULTISHELL_PATH not set (is fnm installed and available?)"
+}
 
 # -------------------------
 # zoxide (cd replacement)
