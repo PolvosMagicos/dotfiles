@@ -51,6 +51,9 @@ load-env (fnm env --shell bash
     | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
 )
 
+# Java (SDKMAN)
+$env.JAVA_HOME = $"($env.HOME)/.sdkman/candidates/java/current"
+
 # Add the following directories to the PATH
 $env.PATH = (
   $env.PATH
@@ -72,6 +75,8 @@ $env.PATH = (
     | prepend ("/home/" + $env.USER + "/flutter/bin")
     # fvm (flutter version manager)
     | prepend ("/usr/local/bin/fvm")
+    # java
+    | prepend $"($env.JAVA_HOME)/bin"
     | uniq # filter so the paths are unique
 )
 
@@ -84,7 +89,6 @@ $env.CHROME_EXECUTABLE = "/usr/bin/chromium-browser"
 # Use nvim as default editor
 $env.EDITOR = "nvim"
 $env.VISUAL = "nvim"
-
 
 alias jb = ^bash -lc "jupyter notebook"
 alias jl = ^bash -lc "jupyter lab"
