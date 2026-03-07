@@ -16,6 +16,17 @@
 #
 # You can remove these comments if you want or leave
 # them for future reference.
+
+
+# -------------------------
+# Zoxide setup
+# -------------------------
+let zoxide_file = ("~/.zoxide.nu" | path expand)
+
+if not ($zoxide_file | path exists) {
+  zoxide init --cmd cd nushell | save -f $zoxide_file
+}
+
 source ~/.config/nushell/banner.nu
 
 $env.config.show_banner = false

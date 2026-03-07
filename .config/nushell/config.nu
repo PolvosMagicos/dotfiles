@@ -16,85 +16,141 @@
 # You can remove these comments if you want or leave
 # them for future reference.
 
-# zoxide
-source ~/.zoxide.nu
+# -------------------------
+# Helpers
+# -------------------------
+def --env add_path [p: string] {
+  let p = ($p | into string)
 
-# Yazi wrapper
-def --env y [...args] {
-	let tmp = (mktemp -t "yazi-cwd.XXXXXX")
-	yazi ...$args --cwd-file $tmp
-	let cwd = (open $tmp)
-	if $cwd != "" and $cwd != $env.PWD {
-		cd $cwd
-	}
-	rm -fp $tmp
-}
+  # Ensure PATH is a list
+  if ($env.PATH | describe) !~ 'list' {
+    $env.PATH = ($env.PATH | split row (char esep))
+  }
 
-let yarn_bins = [
-  ($nu.home-path | path join ".yarn" "bin")
-  ($nu.home-path | path join ".config" "yarn" "global" "node_modules" ".bin")
-]
-for p in $yarn_bins {
-  if not ($env.PATH | any {|e| $e == $p}) {
+  # Only add if it exists and isn't already present
+  if ($p | path exists) and (not ($env.PATH | any {|e| $e == $p })) {
     $env.PATH = ($env.PATH | prepend $p)
   }
 }
 
-# load env from bash for fnm
-load-env (fnm env --shell bash
-    | lines
-    | str replace 'export ' ''
-    | str replace -a '"' ''
-    | split column "="
-    | rename name value
-    | where name != "FNM_ARCH" and name != "PATH"
-    | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
-)
-
-# Java (SDKMAN)
-$env.JAVA_HOME = $"($env.HOME)/.sdkman/candidates/java/current"
-
-# Add the following directories to the PATH
+# Ensure PATH is a list early
 $env.PATH = (
-  $env.PATH
-    | split row (char esep)
-    # fnm (fast node manager)
-    | prepend ("/home/" + $env.USER + "/.local/share/fnm")
-    | prepend $"($env.FNM_MULTISHELL_PATH)/bin"
-    | prepend /usr/local/bin
-    # openmpi lib
-    | prepend /usr/lib64/openmpi/bin
-    # cargo
-    | prepend ("/home/" + $env.USER + "/.cargo/bin")
-    # linuxbrew
-    | prepend /home/linuxbrew/.linuxbrew/bin
-    # android studio
-    | prepend ("/home/" + $env.USER + "/Android/Sdk/emulator")
-    | prepend ("/home/" + $env.USER + "/Android/Sdk/platform-tools")
-    # flutter
-    | prepend ("/home/" + $env.USER + "/flutter/bin")
-    # fvm (flutter version manager)
-    | prepend ("/usr/local/bin/fvm")
-    # java
-    | prepend $"($env.JAVA_HOME)/bin"
-    | uniq # filter so the paths are unique
+  if ($env.PATH | describe) =~ 'list' {
+    $env.PATH
+  } else {
+    $env.PATH | split row (char esep)
+  }
 )
 
-# Set ANDROID HOME
-$env.ANDROID_HOME = ("/home/" + $env.USER + "/Android/Sdk")
 
-# Set chromium
+# -------------------------
+# Yazi wrapper (cd into last dir)
+# -------------------------
+def --env y [...args] {
+  let tmp = (mktemp -t "yazi-cwd.XXXXXX")
+  yazi ...$args --cwd-file $tmp
+  let cwd = (open $tmp)
+  if $cwd != "" and $cwd != $env.PWD {
+    cd $cwd
+  }
+  rm -fp $tmp
+}
+
+
+# -------------------------
+# Zoxide (cd with steroids)
+# -------------------------
+source ~/.zoxide.nu
+
+# -------------------------
+# Yarn global bins
+# -------------------------
+let yarn_bins = [
+  ($env.HOME | path join ".yarn" "bin")
+  ($env.HOME | path join ".config" "yarn" "global" "node_modules" ".bin")
+]
+for p in $yarn_bins { add_path $p }
+
+# -------------------------
+# fnm (Fast Node Manager)
+# -------------------------
+# Load fnm environment (without letting it overwrite PATH)
+load-env (fnm env --shell bash
+  | lines
+  | str replace 'export ' ''
+  | str replace -a '"' ''
+  | split column "="
+  | rename name value
+  | where name != "FNM_ARCH" and name != "PATH"
+  | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
+)
+
+# Ensure fnm's active Node is on PATH (when available)
+if ($env.FNM_MULTISHELL_PATH? | is-not-empty) {
+  add_path ($env.FNM_MULTISHELL_PATH | path join "bin")
+}
+
+# Optional: some setups also use this location (added only if it exists)
+add_path ($env.HOME | path join ".local" "share" "fnm")
+
+# -------------------------
+# Java (SDKMAN)
+# -------------------------
+$env.JAVA_HOME = ($env.HOME | path join ".sdkman" "candidates" "java" "current")
+add_path ($env.JAVA_HOME | path join "bin")
+
+# -------------------------
+# Android SDK
+# -------------------------
+$env.ANDROID_HOME = ($env.HOME | path join "Android" "Sdk")
+add_path ($env.ANDROID_HOME | path join "emulator")
+add_path ($env.ANDROID_HOME | path join "platform-tools")
+
+# -------------------------
+# Flutter
+# -------------------------
+add_path ($env.HOME | path join "flutter" "bin")
+
+# -------------------------
+# Common user/tool bins
+# -------------------------
+add_path ($env.HOME | path join ".local" "bin")
+add_path ($env.HOME | path join "bin")
+add_path ($env.HOME | path join ".cargo" "bin")
+
+# Common system locations (only added if they exist)
+add_path "/usr/local/bin"
+add_path "/usr/local/sbin"
+add_path "/usr/lib64/openmpi/bin"
+add_path "/home/linuxbrew/.linuxbrew/bin"
+add_path "/opt/homebrew/bin"
+add_path "/opt/homebrew/sbin"
+add_path "/usr/local/bin/fvm"
+
+# Bun
+$env.BUN_INSTALL = ($env.HOME | path join ".bun")
+add_path ($env.BUN_INSTALL | path join "bin")
+
+# -------------------------
+# Chromium (optional)
+# -------------------------
 $env.CHROME_EXECUTABLE = "/usr/bin/chromium-browser"
 
-# Use nvim as default editor
+# -------------------------
+# De-duplicate PATH
+# -------------------------
+$env.PATH = ($env.PATH | uniq)
+
+# -------------------------
+# Editor defaults
+# -------------------------
 $env.EDITOR = "nvim"
 $env.VISUAL = "nvim"
 
+# -------------------------
+# Useful aliases
+# -------------------------
+alias pls = sudo
+
 alias jb = ^bash -lc "jupyter notebook"
 alias jl = ^bash -lc "jupyter lab"
-
-# link zoxide to cd command
-zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
-
-# sudo alias
-alias pls = sudo
