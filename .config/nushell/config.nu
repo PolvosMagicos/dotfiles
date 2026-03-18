@@ -17,6 +17,8 @@
 # options using:
 #     config nu --doc | nu-highlight | less -R
 
+# Imports
+use ~/.config/nushell/scripts/nixos-commands.nu *
 
 # -------------------------
 # Helpers
