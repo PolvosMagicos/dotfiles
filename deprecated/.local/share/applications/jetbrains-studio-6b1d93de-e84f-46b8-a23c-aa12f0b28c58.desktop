@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Android Studio Panda 2 2025.3.2
+Exec="/home/minion/.local/share/JetBrains/Toolbox/apps/android-studio/bin/studio" %u
+Version=1.0
+Type=Application
+Categories=Development;IDE;
+Terminal=false
+Icon=jetbrains-studio-6b1d93de-e84f-46b8-a23c-aa12f0b28c58
+X-Icon-Path=/home/minion/.local/share/icons/hicolor/scalable/apps/jetbrains-studio-6b1d93de-e84f-46b8-a23c-aa12f0b28c58.svg
+X-Installed-Icon-Cache-Path=/home/minion/.local/share/icons/hicolor
+X-Icon-Name-Before-Sanitization=jetbrains-studio-6b1d93de-e84f-46b8-a23c-aa12f0b28c58.desktop.icon.svg
+Comment=An IDE for Android app development
+StartupWMClass=jetbrains-studio
+StartupNotify=true

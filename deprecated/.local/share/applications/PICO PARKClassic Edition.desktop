@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=PICO PARK:Classic Edition
+Comment=Play this game on Steam
+Exec=steam steam://rungameid/461040
+Icon=steam_icon_461040
+Terminal=false
+Type=Application
+Categories=Game;

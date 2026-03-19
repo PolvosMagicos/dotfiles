@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=RustRover 2025.3.4
+Exec="/home/minion/.local/share/JetBrains/Toolbox/apps/rustrover/bin/rustrover" %u
+Version=1.0
+Type=Application
+Categories=Development;IDE;
+Terminal=false
+Icon=jetbrains-rustrover-06bf958e-5fa8-4e46-9bc0-10d979b6c5ba
+X-Icon-Path=/home/minion/.local/share/icons/hicolor/scalable/apps/jetbrains-rustrover-06bf958e-5fa8-4e46-9bc0-10d979b6c5ba.svg
+X-Installed-Icon-Cache-Path=/home/minion/.local/share/icons/hicolor
+X-Icon-Name-Before-Sanitization=jetbrains-rustrover-06bf958e-5fa8-4e46-9bc0-10d979b6c5ba.desktop.icon.svg
+Comment=A powerful IDE for Rust
+StartupWMClass=jetbrains-rustrover
+StartupNotify=true

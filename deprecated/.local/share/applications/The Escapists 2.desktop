@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=The Escapists 2
+Comment=Play this game on Steam
+Exec=steam steam://rungameid/641990
+Icon=steam
+Terminal=false
+Type=Application
+Categories=Game;

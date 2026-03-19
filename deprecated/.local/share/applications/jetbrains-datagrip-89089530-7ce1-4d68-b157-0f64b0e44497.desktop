@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=DataGrip 2025.3.5
+Exec="/home/minion/.local/share/JetBrains/Toolbox/apps/datagrip/bin/datagrip" %u
+Version=1.0
+Type=Application
+Categories=Development;IDE;
+Terminal=false
+Icon=jetbrains-datagrip-89089530-7ce1-4d68-b157-0f64b0e44497
+X-Icon-Path=/home/minion/.local/share/icons/hicolor/scalable/apps/jetbrains-datagrip-89089530-7ce1-4d68-b157-0f64b0e44497.svg
+X-Installed-Icon-Cache-Path=/home/minion/.local/share/icons/hicolor
+X-Icon-Name-Before-Sanitization=jetbrains-datagrip-89089530-7ce1-4d68-b157-0f64b0e44497.desktop.icon.svg
+Comment=The IDE for databases and SQL
+StartupWMClass=jetbrains-datagrip
+StartupNotify=true

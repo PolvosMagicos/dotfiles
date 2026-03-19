@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=IntelliJ IDEA 2025.3.3
+Exec="/home/minion/.local/share/JetBrains/Toolbox/apps/intellij-idea-ultimate/bin/idea" %u
+Version=1.0
+Type=Application
+Categories=Development;IDE;
+Terminal=false
+Icon=jetbrains-idea-81283a63-e2ec-449e-ada7-e5d3ff276447
+X-Icon-Path=/home/minion/.local/share/icons/hicolor/scalable/apps/jetbrains-idea-81283a63-e2ec-449e-ada7-e5d3ff276447.svg
+X-Installed-Icon-Cache-Path=/home/minion/.local/share/icons/hicolor
+X-Icon-Name-Before-Sanitization=jetbrains-idea-81283a63-e2ec-449e-ada7-e5d3ff276447.desktop.icon.svg
+Comment=The IDE for pro Java and Kotlin development
+StartupWMClass=jetbrains-idea
+StartupNotify=true

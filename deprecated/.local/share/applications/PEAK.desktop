@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=PEAK
+Comment=Play this game on Steam
+Exec=steam steam://rungameid/3527290
+Icon=steam_icon_3527290
+Terminal=false
+Type=Application
+Categories=Game;
