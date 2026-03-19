@@ -13,8 +13,8 @@ This repo bundles my everyday terminal, editor, shell, file manager, music, and 
 - **Vial layouts** for keyboard mappings
 - local **assets** such as wallpapers and profile pictures
 
-![Terminal screenshot](assets/terminal.png)
-![Neovim screenshot](assets/neovim.png)
+![Terminal screenshot](assets/screenshots/terminal.png)
+![Neovim screenshot](assets/screenshots/neovim.png)
 
 ## Structure
 
