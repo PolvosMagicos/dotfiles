@@ -24,7 +24,7 @@ def welcome [] {
     print "\u{1b}[2A"
 
     echo $"
-                                     (ansi green_bold)Welcome, Minion 👾(ansi reset)
+                                     (ansi green_bold)Welcome, ($user) 👾(ansi reset)
                                      ───────────────────────────────
                                      (ansi green)User:      (ansi purple)($user)
                                      (ansi green)Host:      (ansi purple)($hostname)
@@ -41,7 +41,7 @@ def welcome [] {
     "
   } else {
     echo $"
-  (ansi green_bold)Welcome, Minion 👾(ansi reset)
+  (ansi green_bold)Welcome, ($user) 👾(ansi reset)
   ───────────────────────────────
   (ansi green)User:      (ansi purple)($user)
   (ansi green)Host:      (ansi purple)($hostname)
