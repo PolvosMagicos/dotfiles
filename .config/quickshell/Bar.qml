@@ -2,28 +2,33 @@
 import Quickshell
 
 Scope {
-  // no more time object
+    // no more time object
 
-  Variants {
-    model: Quickshell.screens
+    Variants {
+        model: Quickshell.screens
 
-    PanelWindow {
-      required property var modelData
-      screen: modelData
+        PanelWindow {
+            required property var modelData
+            screen: modelData
 
-      anchors {
-        top: true
-        left: true
-        right: true
-      }
+            anchors {
+                top: true
+                left: true
+                right: true
+            }
 
-      implicitHeight: 30
+            implicitHeight: 30
 
-      ClockWidget {
-        anchors.centerIn: parent
+            ClockWidget {
+                anchors.centerIn: parent
 
-        // no more time binding
-      }
+                // no more time binding
+            }
+
+            Battery {
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+            }
+        }
     }
-  }
 }

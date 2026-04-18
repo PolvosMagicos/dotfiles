@@ -1,3 +1,4 @@
+//@ pragma IconTheme Papirus
 import Quickshell
 import QtQuick
 
