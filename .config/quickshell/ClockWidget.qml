@@ -1,10 +1,11 @@
 // ClockWidget.qml
 import QtQuick
 import "." as Local
+import "theme.js" as Theme
 
 Text {
-  // we no longer need time as an input
-
-  // directly access the time property from the Time singleton
-  text: Local.Time.time
+    text: Local.Time.time
+    color: Theme.text
+    font.pixelSize: 13
+    font.weight: 600
 }

@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Io
+import "theme.js" as Theme
 
 Item {
     id: root
@@ -44,10 +45,10 @@ Item {
             text: `MEM ${root.pct}%`
             color: {
                 if (root.pct >= 80)
-                    return "#e53935";
+                    return Theme.red;
                 if (root.pct >= 60)
-                    return "#fbc02d";
-                return "#42a5f5";
+                    return Theme.yellow;
+                return Theme.blue;
             }
         }
     }

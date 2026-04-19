@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Services.UPower
+import "theme.js" as Theme
 
 Text {
     id: root
@@ -11,10 +12,8 @@ Text {
     text: `BAT ${Math.round(root.pct)}%`
 
     color: {
-        if (root.pct >= 80)
-            return "#4caf50";   // green
-        if (root.pct >= 30)
-            return "#fbc02d";   // yellow
-        return "#e53935";                       // red
+        if (root.pct >= 80) return Theme.green
+        if (root.pct >= 30) return Theme.yellow
+        return Theme.red
     }
 }

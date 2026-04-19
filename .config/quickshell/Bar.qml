@@ -1,6 +1,6 @@
-// Bar.qml
 import Quickshell
 import QtQuick
+import "theme.js" as Theme
 
 Scope {
     Variants {
@@ -16,33 +16,93 @@ Scope {
                 right: true
             }
 
-            implicitHeight: 30
-
-            ClockWidget {
-                anchors.centerIn: parent
-            }
+            implicitHeight: 34
+            color: Theme.base
 
             Row {
+                id: statsRow
                 spacing: 8
+                height: parent.height
                 anchors.right: parent.right
                 anchors.rightMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
 
-                Battery {}
 
-                Text {
-                    text: "|"
-                    color: "#666666"
+                Item {
+                    width: bat.implicitWidth
+                    height: statsRow.height
+
+                    Battery {
+                        id: bat
+                        anchors.centerIn: parent
+                    }
                 }
 
-                Memory {}
+                Item {
+                    width: sep2.implicitWidth
+                    height: statsRow.height
 
-                Text {
-                    text: "|"
-                    color: "#666666"
+                    Text {
+                        id: sep2
+                        anchors.centerIn: parent
+                        text: "•"
+                        color: Theme.overlay0
+                    }
                 }
 
-                Cpu {}
+                Item {
+                    width: mem.implicitWidth
+                    height: statsRow.height
+
+                    Memory {
+                        id: mem
+                        anchors.centerIn: parent
+                    }
+                }
+
+                Item {
+                    width: sep3.implicitWidth
+                    height: statsRow.height
+
+                    Text {
+                        id: sep3
+                        anchors.centerIn: parent
+                        text: "•"
+                        color: Theme.overlay0
+                    }
+                }
+
+                Item {
+                    width: cpu.implicitWidth
+                    height: statsRow.height
+
+                    Cpu {
+                        id: cpu
+                        anchors.centerIn: parent
+                    }
+                }
+
+                Item {
+                    width: sep1.implicitWidth
+                    height: statsRow.height
+
+                    Text {
+                        id: sep1
+                        anchors.centerIn: parent
+                        text: "•"
+                        color: Theme.overlay0
+                    }
+                }
+
+                Item {
+                    width: clock.implicitWidth
+                    height: statsRow.height
+
+                    ClockWidget {
+                        id: clock
+                        anchors.centerIn: parent
+                    }
+                }
             }
         }
     }
