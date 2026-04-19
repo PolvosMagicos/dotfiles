@@ -4,3 +4,4 @@ Bar 1.0 Bar.qml
 Battery 1.0 Battery.qml
 Cpu 1.0 Cpu.qml
 Memory 1.0 Memory.qml
+Workspaces 1.0 Workspaces.qml

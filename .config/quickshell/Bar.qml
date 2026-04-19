@@ -19,6 +19,13 @@ Scope {
             implicitHeight: 34
             color: Theme.base
 
+            Workspaces {
+                screen: modelData
+                anchors.left: parent.left
+                anchors.leftMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
             Row {
                 id: statsRow
                 spacing: 8
@@ -26,7 +33,6 @@ Scope {
                 anchors.right: parent.right
                 anchors.rightMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
-
 
                 Item {
                     width: bat.implicitWidth
