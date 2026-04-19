@@ -1,9 +1,8 @@
 // Bar.qml
 import Quickshell
+import QtQuick
 
 Scope {
-    // no more time object
-
     Variants {
         model: Quickshell.screens
 
@@ -21,13 +20,29 @@ Scope {
 
             ClockWidget {
                 anchors.centerIn: parent
-
-                // no more time binding
             }
 
-            Battery {
+            Row {
+                spacing: 8
                 anchors.right: parent.right
+                anchors.rightMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
+
+                Battery {}
+
+                Text {
+                    text: "|"
+                    color: "#666666"
+                }
+
+                Memory {}
+
+                Text {
+                    text: "|"
+                    color: "#666666"
+                }
+
+                Cpu {}
             }
         }
     }

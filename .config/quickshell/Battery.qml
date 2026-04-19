@@ -1,22 +1,20 @@
 import QtQuick
-import Quickshell
 import Quickshell.Services.UPower
-import Quickshell.Widgets
 
-Row {
-    spacing: 6
+Text {
+    id: root
 
     readonly property var battery: UPower.displayDevice
+    readonly property real pct: root.battery.percentage * 100
 
-    visible: battery.ready && battery.isLaptopBattery
+    visible: root.battery.ready && root.battery.isLaptopBattery
+    text: `BAT ${Math.round(root.pct)}%`
 
-    IconImage {
-        source: Quickshell.hasThemeIcon(battery.iconName) ? Quickshell.iconPath(battery.iconName) : ""
-        implicitSize: 18
-        visible: source !== ""
-    }
-
-    Text {
-        text: `${Math.round(battery.percentage * 100)}%`
+    color: {
+        if (root.pct >= 80)
+            return "#4caf50";   // green
+        if (root.pct >= 30)
+            return "#fbc02d";   // yellow
+        return "#e53935";                       // red
     }
 }
