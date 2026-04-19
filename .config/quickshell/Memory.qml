@@ -42,7 +42,7 @@ Item {
         id: row
 
         Text {
-            text: `MEM ${root.pct}%`
+            text: `MEM: ${root.pct}%`
             color: {
                 if (root.pct >= 80)
                     return Theme.red;

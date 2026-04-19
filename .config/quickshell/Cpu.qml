@@ -38,7 +38,7 @@ Item {
         id: row
 
         Text {
-            text: `CPU ${root.pct}%`
+            text: `CPU: ${root.pct}%`
             color: {
                 if (root.pct >= 80)
                     return Theme.red;

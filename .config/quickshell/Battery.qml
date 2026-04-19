@@ -9,11 +9,13 @@ Text {
     readonly property real pct: root.battery.percentage * 100
 
     visible: root.battery.ready && root.battery.isLaptopBattery
-    text: `BAT ${Math.round(root.pct)}%`
+    text: `BAT: ${Math.round(root.pct)}%`
 
     color: {
-        if (root.pct >= 80) return Theme.green
-        if (root.pct >= 30) return Theme.yellow
-        return Theme.red
+        if (root.pct >= 80)
+            return Theme.green;
+        if (root.pct >= 30)
+            return Theme.yellow;
+        return Theme.red;
     }
 }

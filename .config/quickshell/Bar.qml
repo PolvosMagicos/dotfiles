@@ -35,21 +35,21 @@ Scope {
                 anchors.verticalCenter: parent.verticalCenter
 
                 Item {
-                    width: bat.implicitWidth
+                    width: cpu.implicitWidth
                     height: statsRow.height
 
-                    Battery {
-                        id: bat
+                    Cpu {
+                        id: cpu
                         anchors.centerIn: parent
                     }
                 }
 
                 Item {
-                    width: sep2.implicitWidth
+                    width: sep1.implicitWidth
                     height: statsRow.height
 
                     Text {
-                        id: sep2
+                        id: sep1
                         anchors.centerIn: parent
                         text: "•"
                         color: Theme.overlay0
@@ -67,6 +67,28 @@ Scope {
                 }
 
                 Item {
+                    width: sep2.implicitWidth
+                    height: statsRow.height
+
+                    Text {
+                        id: sep2
+                        anchors.centerIn: parent
+                        text: "•"
+                        color: Theme.overlay0
+                    }
+                }
+
+                Item {
+                    width: amd.implicitWidth
+                    height: statsRow.height
+
+                    AmdGpu {
+                        id: amd
+                        anchors.centerIn: parent
+                    }
+                }
+
+                Item {
                     width: sep3.implicitWidth
                     height: statsRow.height
 
@@ -79,21 +101,43 @@ Scope {
                 }
 
                 Item {
-                    width: cpu.implicitWidth
+                    width: nvidia.implicitWidth
                     height: statsRow.height
 
-                    Cpu {
-                        id: cpu
+                    NvidiaGpu {
+                        id: nvidia
                         anchors.centerIn: parent
                     }
                 }
 
                 Item {
-                    width: sep1.implicitWidth
+                    width: sep4.implicitWidth
                     height: statsRow.height
 
                     Text {
-                        id: sep1
+                        id: sep4
+                        anchors.centerIn: parent
+                        text: "•"
+                        color: Theme.overlay0
+                    }
+                }
+
+                Item {
+                    width: bat.implicitWidth
+                    height: statsRow.height
+
+                    Battery {
+                        id: bat
+                        anchors.centerIn: parent
+                    }
+                }
+
+                Item {
+                    width: sep5.implicitWidth
+                    height: statsRow.height
+
+                    Text {
+                        id: sep5
                         anchors.centerIn: parent
                         text: "•"
                         color: Theme.overlay0
