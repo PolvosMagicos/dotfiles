@@ -6,6 +6,6 @@ import "theme.js" as Theme
 Text {
     text: Local.Time.time
     color: Theme.text
-    font.pixelSize: 13
-    font.weight: 600
+    font.pixelSize: 12
+    font.weight: 700
 }

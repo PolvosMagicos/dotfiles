@@ -10,6 +10,8 @@ Text {
 
     visible: root.battery.ready && root.battery.isLaptopBattery
     text: `BAT: ${Math.round(root.pct)}%`
+    font.pixelSize: 12
+    font.weight: 700
 
     color: {
         if (root.pct >= 80)

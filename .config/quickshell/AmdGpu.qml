@@ -10,7 +10,7 @@ Text {
 
     text: Number.isNaN(root.pct) ? `iGPU: ${root.value}` : `iGPU: ${Math.round(root.pct)}%`
     font.pixelSize: 12
-    font.weight: 500
+    font.weight: 700
 
     color: {
         if (Number.isNaN(root.pct)) return Theme.overlay0

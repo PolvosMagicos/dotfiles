@@ -43,6 +43,8 @@ Item {
 
         Text {
             text: `MEM: ${root.pct}%`
+            font.pixelSize: 12
+            font.weight: 700
             color: {
                 if (root.pct >= 80)
                     return Theme.red;
