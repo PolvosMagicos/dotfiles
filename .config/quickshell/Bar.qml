@@ -27,12 +27,43 @@ Scope {
             implicitHeight: 34
             color: Theme.base
 
-            Workspaces {
-                niriService: niriSvc
-                screen: panel.modelData
+            Row {
+                id: leftRow
+                spacing: 8
                 anchors.left: parent.left
                 anchors.leftMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
+
+                Workspaces {
+                    niriService: niriSvc
+                    screen: panel.modelData
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Text {
+                    id: sepLeft1
+                    text: "•"
+                    color: Theme.overlay0
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Wifi {
+                    id: wifiWidget
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Text {
+                    id: sepLeft2
+                    text: "•"
+                    color: Theme.overlay0
+                    visible: wifiWidget.visible || volumeWidget.visible
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Volume {
+                    id: volumeWidget
+                    anchors.verticalCenter: parent.verticalCenter
+                }
             }
 
             FocusedApp {
@@ -60,13 +91,14 @@ Scope {
                 }
 
                 Item {
-                    width: sep1.implicitWidth
+                    width: sepRigth1.implicitWidth
                     height: statsRow.height
 
                     Text {
-                        id: sep1
+                        id: sepRigth1
                         anchors.centerIn: parent
                         text: "•"
+                        visible: cpu.visible || mem.visible
                         color: Theme.overlay0
                     }
                 }
@@ -82,13 +114,14 @@ Scope {
                 }
 
                 Item {
-                    width: sep2.implicitWidth
+                    width: sepRigth2.implicitWidth
                     height: statsRow.height
 
                     Text {
-                        id: sep2
+                        id: sepRigth2
                         anchors.centerIn: parent
                         text: "•"
+                        visible: mem.visible || amd.visible
                         color: Theme.overlay0
                     }
                 }
@@ -104,13 +137,14 @@ Scope {
                 }
 
                 Item {
-                    width: sep3.implicitWidth
+                    width: sepRigth3.implicitWidth
                     height: statsRow.height
 
                     Text {
-                        id: sep3
+                        id: sepRigth3
                         anchors.centerIn: parent
                         text: "•"
+                        visible: amd.visible || nvidia.visible
                         color: Theme.overlay0
                     }
                 }
@@ -126,13 +160,14 @@ Scope {
                 }
 
                 Item {
-                    width: sep4.implicitWidth
+                    width: sepRigth4.implicitWidth
                     height: statsRow.height
 
                     Text {
-                        id: sep4
+                        id: sepRigth4
                         anchors.centerIn: parent
                         text: "•"
+                        visible: nvidia.visible || bat.visible
                         color: Theme.overlay0
                     }
                 }
@@ -148,13 +183,14 @@ Scope {
                 }
 
                 Item {
-                    width: sep5.implicitWidth
+                    width: sepRigth5.implicitWidth
                     height: statsRow.height
 
                     Text {
-                        id: sep5
+                        id: sepRigth5
                         anchors.centerIn: parent
                         text: "•"
+                        visible: bat.visible || clock.visible
                         color: Theme.overlay0
                     }
                 }

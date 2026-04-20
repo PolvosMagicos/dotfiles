@@ -8,3 +8,5 @@ Workspaces 1.0 Workspaces.qml
 AmdGpu 1.0 AmdGpu.qml
 NvidiaGpu 1.0 NvidiaGpu.qml
 FocusedApp 1.0 FocusedApp.qml
+Wifi 1.0 Wifi.qml
+Volume 1.0 Volume.qml

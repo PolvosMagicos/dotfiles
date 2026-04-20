@@ -22,17 +22,19 @@ Item {
             readonly property string iconSource: root.win && root.win.iconPath !== "" ? "file://" + root.win.iconPath : ""
 
             source: iconSource
-            width: 16
-            height: 16
+            width: 18
+            height: 18
             fillMode: Image.PreserveAspectFit
             smooth: true
             visible: iconSource !== ""
+            anchors.verticalCenter: parent.verticalCenter
         }
 
         Text {
             width: root.maxTitleWidth
             elide: Text.ElideRight
             horizontalAlignment: Text.AlignHCenter
+            anchors.verticalCenter: parent.verticalCenter
 
             text: {
                 if (!root.win)
