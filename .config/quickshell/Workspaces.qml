@@ -1,27 +1,22 @@
 pragma ComponentBehavior: Bound
 import QtQuick
-import Niri 0.1
 import "theme.js" as Theme
 
 Item {
     id: root
 
     required property var screen
+    required property var niriService
 
     implicitWidth: row.implicitWidth
     implicitHeight: row.implicitHeight
-
-    Niri {
-        id: niri
-        Component.onCompleted: connect()
-    }
 
     Row {
         id: row
         spacing: 10
 
         Repeater {
-            model: niri.workspaces
+            model: root.niriService.workspaces
 
             delegate: Item {
                 id: wsItem
@@ -78,7 +73,7 @@ Item {
                     anchors.fill: parent
                     enabled: wsItem.belongsHere
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: niri.focusWorkspaceById(wsItem.id)
+                    onClicked: root.niriService.focusWorkspaceById(wsItem.id)
                 }
             }
         }

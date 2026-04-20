@@ -1,12 +1,20 @@
+pragma ComponentBehavior: Bound
 import Quickshell
 import QtQuick
+import Niri 0.1
 import "theme.js" as Theme
 
 Scope {
+    Niri {
+        id: niriSvc
+        Component.onCompleted: connect()
+    }
+
     Variants {
         model: Quickshell.screens
 
         PanelWindow {
+            id: panel
             required property var modelData
             screen: modelData
 
@@ -20,9 +28,16 @@ Scope {
             color: Theme.base
 
             Workspaces {
-                screen: modelData
+                niriService: niriSvc
+                screen: panel.modelData
                 anchors.left: parent.left
                 anchors.leftMargin: 12
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            FocusedApp {
+                niriService: niriSvc
+                anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
             }
 

@@ -7,3 +7,4 @@ Memory 1.0 Memory.qml
 Workspaces 1.0 Workspaces.qml
 AmdGpu 1.0 AmdGpu.qml
 NvidiaGpu 1.0 NvidiaGpu.qml
+FocusedApp 1.0 FocusedApp.qml

@@ -1,0 +1,48 @@
+import QtQuick
+import "theme.js" as Theme
+
+Item {
+    id: root
+
+    required property var niriService
+    property int maxTitleWidth: 360
+
+    readonly property var win: root.niriService.focusedWindow
+
+    implicitWidth: content.implicitWidth
+    implicitHeight: content.implicitHeight
+    visible: win !== null && ((win.title ?? "") !== "" || (win.appId ?? "") !== "")
+
+    Row {
+        id: content
+        spacing: 8
+        anchors.centerIn: parent
+
+        Image {
+            readonly property string iconSource: root.win && root.win.iconPath !== "" ? "file://" + root.win.iconPath : ""
+
+            source: iconSource
+            width: 16
+            height: 16
+            fillMode: Image.PreserveAspectFit
+            smooth: true
+            visible: iconSource !== ""
+        }
+
+        Text {
+            width: root.maxTitleWidth
+            elide: Text.ElideRight
+            horizontalAlignment: Text.AlignHCenter
+
+            text: {
+                if (!root.win)
+                    return "";
+                return root.win.title !== "" ? root.win.title : root.win.appId;
+            }
+
+            color: Theme.text
+            font.pixelSize: 12
+            font.weight: 700
+        }
+    }
+}
