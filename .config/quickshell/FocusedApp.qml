@@ -22,12 +22,16 @@ Item {
             readonly property string iconSource: root.win && root.win.iconPath !== "" ? "file://" + root.win.iconPath : ""
 
             source: iconSource
-            width: 18
-            height: 18
+            width: 20
+            height: 20
+
+            sourceSize.width: 38
+            sourceSize.height: 38
+
             fillMode: Image.PreserveAspectFit
             smooth: true
+            mipmap: true
             visible: iconSource !== ""
-            anchors.verticalCenter: parent.verticalCenter
         }
 
         Text {
