@@ -1,12 +1,12 @@
-singleton Time 1.0 Time.qml
-ClockWidget 1.0 ClockWidget.qml
-Bar 1.0 Bar.qml
-Battery 1.0 Battery.qml
-Cpu 1.0 Cpu.qml
-Memory 1.0 Memory.qml
-Workspaces 1.0 Workspaces.qml
-AmdGpu 1.0 AmdGpu.qml
-NvidiaGpu 1.0 NvidiaGpu.qml
-FocusedApp 1.0 FocusedApp.qml
-Wifi 1.0 Wifi.qml
-Volume 1.0 Volume.qml
+singleton Time 1.0 services/Time.qml
+ClockWidget 1.0 widgets/ClockWidget.qml
+Bar 1.0 layout/Bar.qml
+Battery 1.0 widgets/Battery.qml
+Cpu 1.0 widgets/Cpu.qml
+Memory 1.0 widgets/Memory.qml
+Workspaces 1.0 widgets/Workspaces.qml
+AmdGpu 1.0 widgets/AmdGpu.qml
+NvidiaGpu 1.0 widgets/NvidiaGpu.qml
+FocusedApp 1.0 widgets/FocusedApp.qml
+Wifi 1.0 widgets/Wifi.qml
+Volume 1.0 widgets/Volume.qml

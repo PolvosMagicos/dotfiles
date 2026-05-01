@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell.Services.UPower
-import "theme.js" as Theme
+import "../style/theme.js" as Theme
 
 Text {
     id: root

@@ -2,7 +2,8 @@ pragma ComponentBehavior: Bound
 import Quickshell
 import QtQuick
 import Niri 0.1
-import "theme.js" as Theme
+import "../style/theme.js" as Theme
+import "../widgets" as Widgets
 
 Scope {
     Niri {
@@ -34,7 +35,7 @@ Scope {
                 anchors.leftMargin: 12
                 anchors.verticalCenter: parent.verticalCenter
 
-                Workspaces {
+                Widgets.Workspaces {
                     niriService: niriSvc
                     screen: panel.modelData
                     anchors.verticalCenter: parent.verticalCenter
@@ -47,7 +48,7 @@ Scope {
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-                Wifi {
+                Widgets.Wifi {
                     id: wifiWidget
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -60,13 +61,13 @@ Scope {
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-                Volume {
+                Widgets.Volume {
                     id: volumeWidget
                     anchors.verticalCenter: parent.verticalCenter
                 }
             }
 
-            FocusedApp {
+            Widgets.FocusedApp {
                 niriService: niriSvc
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -84,7 +85,7 @@ Scope {
                     width: cpu.implicitWidth
                     height: statsRow.height
 
-                    Cpu {
+                    Widgets.Cpu {
                         id: cpu
                         anchors.centerIn: parent
                     }
@@ -107,7 +108,7 @@ Scope {
                     width: mem.implicitWidth
                     height: statsRow.height
 
-                    Memory {
+                    Widgets.Memory {
                         id: mem
                         anchors.centerIn: parent
                     }
@@ -130,7 +131,7 @@ Scope {
                     width: amd.implicitWidth
                     height: statsRow.height
 
-                    AmdGpu {
+                    Widgets.AmdGpu {
                         id: amd
                         anchors.centerIn: parent
                     }
@@ -153,7 +154,7 @@ Scope {
                     width: nvidia.implicitWidth
                     height: statsRow.height
 
-                    NvidiaGpu {
+                    Widgets.NvidiaGpu {
                         id: nvidia
                         anchors.centerIn: parent
                     }
@@ -176,7 +177,7 @@ Scope {
                     width: bat.implicitWidth
                     height: statsRow.height
 
-                    Battery {
+                    Widgets.Battery {
                         id: bat
                         anchors.centerIn: parent
                     }
@@ -199,7 +200,7 @@ Scope {
                     width: clock.implicitWidth
                     height: statsRow.height
 
-                    ClockWidget {
+                    Widgets.ClockWidget {
                         id: clock
                         anchors.centerIn: parent
                     }

@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
-import "theme.js" as Theme
+import "../style/theme.js" as Theme
 
 Item {
     id: root

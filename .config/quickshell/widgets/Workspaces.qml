@@ -1,6 +1,6 @@
 pragma ComponentBehavior: Bound
 import QtQuick
-import "theme.js" as Theme
+import "../style/theme.js" as Theme
 
 Item {
     id: root
