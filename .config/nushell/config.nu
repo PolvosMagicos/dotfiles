@@ -19,6 +19,7 @@
 
 # Imports
 use ~/.config/nushell/scripts/nixos-commands.nu *
+use ~/.config/nushell/scripts/esp-commands.nu *
 
 # -------------------------
 # Helpers
