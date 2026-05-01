@@ -45,6 +45,7 @@ Scope {
                     id: sepLeft1
                     text: "•"
                     color: Theme.overlay0
+                    visible: wifiWidget.visible || brightnessWidget.visible || volumeWidget.visible
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
@@ -57,13 +58,36 @@ Scope {
                     id: sepLeft2
                     text: "•"
                     color: Theme.overlay0
-                    visible: wifiWidget.visible || volumeWidget.visible
+                    visible: wifiWidget.visible && brightnessWidget.visible
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                Widgets.Brightness {
+                    id: brightnessWidget
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    onToggleRequested: {
+                        volumeWidget.closePopup();
+                        brightnessWidget.togglePopup();
+                    }
+                }
+
+                Text {
+                    id: sepLeft3
+                    text: "•"
+                    color: Theme.overlay0
+                    visible: volumeWidget.visible && (wifiWidget.visible || brightnessWidget.visible)
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
                 Widgets.Volume {
                     id: volumeWidget
                     anchors.verticalCenter: parent.verticalCenter
+
+                    onToggleRequested: {
+                        brightnessWidget.closePopup();
+                        volumeWidget.togglePopup();
+                    }
                 }
             }
 

@@ -2,14 +2,18 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
+import "." as Local
 import "../style/theme.js" as Theme
 
 Item {
     id: root
 
+    signal toggleRequested()
+
     readonly property var sink: Pipewire.defaultAudioSink
     readonly property var audioNode: root.sink ? root.sink.audio : null
     readonly property real vol: root.audioNode ? root.audioNode.volume : 0
+    property bool popupVisible: false
 
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight
@@ -23,6 +27,7 @@ Item {
         IconImage {
             id: volumeIcon
             implicitSize: 16
+            anchors.verticalCenter: parent.verticalCenter
 
             source: {
                 if (!root.audioNode)
@@ -57,12 +62,58 @@ Item {
         objects: [Pipewire.defaultAudioSink]
     }
 
+    function closePopup() {
+        root.popupVisible = false;
+    }
+
+    function togglePopup() {
+        root.popupVisible = !root.popupVisible;
+    }
+
+    Local.PopupSlider {
+        id: popup
+
+        anchorItem: root
+        anchorWindow: QsWindow.window
+        label: "Volume"
+        iconSource: volumeIcon.source
+        valueText: root.audioNode ? `${Math.round(root.vol * 100)}%` : ""
+        accent: Theme.blue
+        value: root.vol
+        sliderEnabled: !!root.audioNode
+        visible: root.popupVisible && root.visible
+
+        onVisibleChanged: {
+            if (!visible && root.popupVisible)
+                root.popupVisible = false;
+        }
+
+        onValueDragged: {
+            if (root.audioNode) {
+                root.audioNode.muted = false;
+                root.audioNode.volume = value;
+            }
+        }
+    }
+
     MouseArea {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        onClicked: {
-            if (root.audioNode)
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: function(mouse) {
+            if (!root.audioNode)
+                return;
+
+            if (mouse.button === Qt.RightButton) {
                 root.audioNode.muted = !root.audioNode.muted;
+            } else {
+                root.toggleRequested();
+            }
         }
+    }
+
+    onVisibleChanged: {
+        if (!visible)
+            root.popupVisible = false;
     }
 }

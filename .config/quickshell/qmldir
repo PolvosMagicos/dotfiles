@@ -9,4 +9,6 @@ AmdGpu 1.0 widgets/AmdGpu.qml
 NvidiaGpu 1.0 widgets/NvidiaGpu.qml
 FocusedApp 1.0 widgets/FocusedApp.qml
 Wifi 1.0 widgets/Wifi.qml
+Brightness 1.0 widgets/Brightness.qml
 Volume 1.0 widgets/Volume.qml
+PopupSlider 1.0 widgets/PopupSlider.qml
