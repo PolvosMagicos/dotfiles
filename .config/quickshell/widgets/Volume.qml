@@ -8,12 +8,13 @@ import "../style/theme.js" as Theme
 Item {
     id: root
 
-    signal toggleRequested()
+    signal toggleRequested
 
     readonly property var sink: Pipewire.defaultAudioSink
     readonly property var audioNode: root.sink ? root.sink.audio : null
     readonly property real vol: root.audioNode ? root.audioNode.volume : 0
     property bool popupVisible: false
+    readonly property var streamModel: sinkLinks.linkGroups
 
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight
@@ -62,6 +63,11 @@ Item {
         objects: [Pipewire.defaultAudioSink]
     }
 
+    PwNodeLinkTracker {
+        id: sinkLinks
+        node: Pipewire.defaultAudioSink
+    }
+
     function closePopup() {
         root.popupVisible = false;
     }
@@ -83,12 +89,14 @@ Item {
         sliderEnabled: !!root.audioNode
         visible: root.popupVisible && root.visible
 
+        streamModel: sinkLinks.linkGroups
+
         onVisibleChanged: {
             if (!visible && root.popupVisible)
                 root.popupVisible = false;
         }
 
-        onValueDragged: {
+        onValueDragged: function (value) {
             if (root.audioNode) {
                 root.audioNode.muted = false;
                 root.audioNode.volume = value;
@@ -100,7 +108,7 @@ Item {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onClicked: function(mouse) {
+        onClicked: function (mouse) {
             if (!root.audioNode)
                 return;
 
