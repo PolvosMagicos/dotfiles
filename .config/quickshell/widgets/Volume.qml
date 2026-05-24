@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
+import ".." as Config
 import "." as Local
 import "../style/theme.js" as Theme
 
@@ -53,7 +54,8 @@ Item {
         Text {
             text: root.audioNode ? (root.audioNode.muted ? " muted" : ` ${Math.round(root.vol * 100)}%`) : ""
             color: root.audioNode && root.audioNode.muted ? Theme.overlay0 : Theme.text
-            font.pixelSize: 12
+            font.family: Config.Theme.monoFontFamily
+            font.pixelSize: Config.Theme.fontSize
             font.weight: 700
             anchors.verticalCenter: parent.verticalCenter
         }

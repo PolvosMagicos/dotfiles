@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 import Quickshell
 import QtQuick
 import Niri 0.1
+import ".." as Config
 import "../style/theme.js" as Theme
 import "../widgets" as Widgets
 
@@ -45,6 +46,8 @@ Scope {
                     id: sepLeft1
                     text: "•"
                     color: Theme.overlay0
+                    font.family: Config.Theme.monoFontFamily
+                    font.pixelSize: Config.Theme.fontSize
                     visible: wifiWidget.visible || brightnessWidget.visible || volumeWidget.visible
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -58,6 +61,8 @@ Scope {
                     id: sepLeft2
                     text: "•"
                     color: Theme.overlay0
+                    font.family: Config.Theme.monoFontFamily
+                    font.pixelSize: Config.Theme.fontSize
                     visible: wifiWidget.visible && brightnessWidget.visible
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -76,6 +81,8 @@ Scope {
                     id: sepLeft3
                     text: "•"
                     color: Theme.overlay0
+                    font.family: Config.Theme.monoFontFamily
+                    font.pixelSize: Config.Theme.fontSize
                     visible: volumeWidget.visible && (wifiWidget.visible || brightnessWidget.visible)
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -125,6 +132,8 @@ Scope {
                         text: "•"
                         visible: cpu.visible || mem.visible
                         color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
                     }
                 }
 
@@ -148,6 +157,8 @@ Scope {
                         text: "•"
                         visible: mem.visible || amd.visible
                         color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
                     }
                 }
 
@@ -171,6 +182,8 @@ Scope {
                         text: "•"
                         visible: amd.visible || nvidia.visible
                         color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
                     }
                 }
 
@@ -194,6 +207,8 @@ Scope {
                         text: "•"
                         visible: nvidia.visible || bat.visible
                         color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
                     }
                 }
 
@@ -217,6 +232,8 @@ Scope {
                         text: "•"
                         visible: bat.visible || clock.visible
                         color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
                     }
                 }
 

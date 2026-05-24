@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
+import ".." as Config
 import "." as Local
 import "../style/theme.js" as Theme
 
@@ -59,7 +60,8 @@ Item {
             text: root.iconGlyph
             color: root.canSet ? Theme.text : Theme.overlay0
             opacity: root.canSet ? 1.0 : 0.65
-            font.pixelSize: 20
+            font.family: Config.Theme.monoFontFamily
+            font.pixelSize: Config.Theme.fontSize
             font.weight: 700
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -67,7 +69,8 @@ Item {
         Text {
             text: ` ${Math.round(root.pct * 100)}%`
             color: root.canSet ? Theme.text : Theme.overlay0
-            font.pixelSize: 12
+            font.family: Config.Theme.monoFontFamily
+            font.pixelSize: Config.Theme.fontSize
             font.weight: 700
             anchors.verticalCenter: parent.verticalCenter
         }

@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 import QtQuick
+import ".." as Config
 import "../style/theme.js" as Theme
 
 Item {
@@ -45,7 +46,8 @@ Item {
                         if (wsItem.isActive) return Theme.subtext1
                         return Theme.overlay0
                     }
-                    font.pixelSize: 12
+                    font.family: Config.Theme.monoFontFamily
+                    font.pixelSize: Config.Theme.fontSize
                     font.weight: wsItem.isFocused ? 700 : 500
                 }
 

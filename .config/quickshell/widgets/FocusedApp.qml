@@ -1,4 +1,5 @@
 import QtQuick
+import ".." as Config
 import "../style/theme.js" as Theme
 
 Item {
@@ -47,7 +48,8 @@ Item {
             }
 
             color: Theme.text
-            font.pixelSize: 12
+            font.family: Config.Theme.monoFontFamily
+            font.pixelSize: Config.Theme.fontSize
             font.weight: 700
         }
     }

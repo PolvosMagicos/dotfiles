@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
+import ".." as Config
 import "../style/theme.js" as Theme
 
 PopupWindow {
@@ -189,6 +190,7 @@ PopupWindow {
                     text: root.iconText
                     color: root.sliderEnabled ? Theme.text : Theme.overlay0
                     opacity: root.sliderEnabled ? 1.0 : 0.65
+                    font.family: Config.Theme.monoFontFamily
                     font.pixelSize: root.iconPixelSize
                     font.weight: 700
                     anchors.verticalCenter: parent.verticalCenter
@@ -197,7 +199,8 @@ PopupWindow {
                 Text {
                     text: root.label
                     color: Theme.text
-                    font.pixelSize: 12
+                    font.family: Config.Theme.monoFontFamily
+                    font.pixelSize: Config.Theme.fontSize
                     font.weight: 700
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -205,7 +208,8 @@ PopupWindow {
                 Text {
                     text: root.valueText
                     color: root.sliderEnabled ? Theme.subtext1 : Theme.overlay0
-                    font.pixelSize: 12
+                    font.family: Config.Theme.monoFontFamily
+                    font.pixelSize: Config.Theme.fontSize
                     font.weight: 700
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -232,7 +236,8 @@ PopupWindow {
                 visible: root.streamModel && root.streamModel.count > 0
                 text: "Applications"
                 color: Theme.subtext1
-                font.pixelSize: 11
+                font.family: Config.Theme.monoFontFamily
+                font.pixelSize: Config.Theme.fontSize
                 font.weight: 700
             }
 
@@ -286,7 +291,8 @@ PopupWindow {
                             width: Math.max(0, appHeader.width - 16 - 8 - appPercent.width - 8)
                             text: root.streamName(appEntry.node)
                             color: appEntry.audio && appEntry.audio.muted ? Theme.overlay0 : Theme.text
-                            font.pixelSize: 12
+                            font.family: Config.Theme.monoFontFamily
+                            font.pixelSize: Config.Theme.fontSize
                             font.weight: 700
                             elide: Text.ElideRight
                             anchors.verticalCenter: parent.verticalCenter
@@ -297,7 +303,8 @@ PopupWindow {
 
                             text: appEntry.audio ? (appEntry.audio.muted ? "muted" : root.percentText(appEntry.audio.volume)) : ""
                             color: appEntry.audio && appEntry.audio.muted ? Theme.overlay0 : Theme.subtext1
-                            font.pixelSize: 11
+                            font.family: Config.Theme.monoFontFamily
+                            font.pixelSize: Config.Theme.fontSize
                             font.weight: 700
                             anchors.verticalCenter: parent.verticalCenter
                         }

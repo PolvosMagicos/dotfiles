@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Networking
+import ".." as Config
 import "../style/theme.js" as Theme
 
 Row {
@@ -66,7 +67,8 @@ Row {
     Text {
         text: root.connectedNetwork ? ` ${root.connectedNetwork.name} ${Math.round(root.strength * 100)}%` : "offline"
         color: root.connectedNetwork ? Theme.text : Theme.overlay0
-        font.pixelSize: 12
+        font.family: Config.Theme.monoFontFamily
+        font.pixelSize: Config.Theme.fontSize
         font.weight: 700
         anchors.verticalCenter: parent.verticalCenter
         elide: Text.ElideRight

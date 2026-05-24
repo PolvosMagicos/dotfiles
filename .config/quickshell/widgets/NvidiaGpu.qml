@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Io
+import ".." as Config
 import "../style/theme.js" as Theme
 
 Text {
@@ -9,7 +10,8 @@ Text {
     readonly property real pct: Number(root.value)
 
     text: Number.isNaN(root.pct) ? `dGPU: ${root.value}` : `dGPU: ${Math.round(root.pct)}%`
-    font.pixelSize: 12
+    font.family: Config.Theme.monoFontFamily
+    font.pixelSize: Config.Theme.fontSize
     font.weight: 700
 
     color: {

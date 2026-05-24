@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Services.UPower
+import ".." as Config
 import "../style/theme.js" as Theme
 
 Text {
@@ -10,7 +11,8 @@ Text {
 
     visible: root.battery.ready && root.battery.isLaptopBattery
     text: `BAT: ${Math.round(root.pct)}%`
-    font.pixelSize: 12
+    font.family: Config.Theme.monoFontFamily
+    font.pixelSize: Config.Theme.fontSize
     font.weight: 700
 
     color: {

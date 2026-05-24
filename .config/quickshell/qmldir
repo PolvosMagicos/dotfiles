@@ -1,3 +1,4 @@
+singleton Theme 1.0 Theme.qml
 singleton Time 1.0 services/Time.qml
 ClockWidget 1.0 widgets/ClockWidget.qml
 Bar 1.0 layout/Bar.qml

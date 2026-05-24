@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Io
+import ".." as Config
 import "../style/theme.js" as Theme
 
 Item {
@@ -43,7 +44,8 @@ Item {
 
         Text {
             text: `MEM: ${root.pct}%`
-            font.pixelSize: 12
+            font.family: Config.Theme.monoFontFamily
+            font.pixelSize: Config.Theme.fontSize
             font.weight: 700
             color: {
                 if (root.pct >= 80)
