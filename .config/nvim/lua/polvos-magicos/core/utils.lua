@@ -1,5 +1,7 @@
 local M = {}
 
+local lsp_formatting_augroup = vim.api.nvim_create_augroup("LspFormatting", { clear = false })
+
 -- Functional wrapper for mapping custom keybindings
 M.map = function(mode, lhs, rhs, opts)
 	local options = { noremap = true, silent = true }
@@ -46,7 +48,6 @@ M.toggle_atac = function()
 end
 
 M.on_attach = function(client, bufnr)
-	local augroup = vim.api.nvim_create_augroup("LspFormatting", { clear = true })
 	-- Set up keymaps (shared across all servers)
 	local opts = { noremap = true, silent = true, buffer = bufnr }
 
@@ -110,19 +111,20 @@ M.on_attach = function(client, bufnr)
 
 	-- Inlay Hints
 	vim.keymap.set("n", "<leader>lh", function()
-		vim.lsp.inlay_hint(bufnr, not vim.lsp.inlay_hint.is_enabled(bufnr))
+		local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+		vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
 	end, vim.tbl_extend("force", opts, { desc = "Toggle Inlay Hints" }))
 
 	-- Enable formatting on save (if supported by the server)
 	if client.supports_method("textDocument/formatting") then
 		-- Clear existing autocommands for this buffer
 		vim.api.nvim_clear_autocmds({
-			group = augroup,
+			group = lsp_formatting_augroup,
 			buffer = bufnr,
 		})
 		-- Add a new autocommand for formatting on save
 		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = augroup,
+			group = lsp_formatting_augroup,
 			buffer = bufnr,
 			callback = function()
 				vim.lsp.buf.format({

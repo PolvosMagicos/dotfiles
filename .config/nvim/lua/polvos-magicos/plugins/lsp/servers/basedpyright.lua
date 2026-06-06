@@ -3,9 +3,7 @@ return {
   config = {
     cmd = { "pyright-langserver", "--stdio" },
     filetypes = { "python" },
-    root_dir = function()
-      return vim.fs.dirname(vim.fs.find({ "pyproject.toml", "setup.py", ".git" }, { upward = true })[1])
-    end,
+    root_markers = { "pyproject.toml", "setup.py", ".git" },
     single_file_support = true,
     settings = {
       python = {
