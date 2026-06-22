@@ -13,3 +13,4 @@ Wifi 1.0 widgets/Wifi.qml
 Brightness 1.0 widgets/Brightness.qml
 Volume 1.0 widgets/Volume.qml
 PopupSlider 1.0 widgets/PopupSlider.qml
+Notifications 1.0 widgets/Notifications.qml
