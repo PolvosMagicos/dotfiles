@@ -15,236 +15,247 @@ Scope {
     Variants {
         model: Quickshell.screens
 
-        PanelWindow {
-            id: panel
+        Scope {
+            id: screenScope
+
             required property var modelData
-            screen: modelData
 
-            anchors {
-                top: true
-                left: true
-                right: true
-            }
+            PanelWindow {
+                id: panel
+                screen: screenScope.modelData
 
-            implicitHeight: 34
-            color: Theme.base
+                anchors {
+                    top: true
+                    left: true
+                    right: true
+                }
 
-            Row {
-                id: leftRow
-                spacing: 8
-                anchors.left: parent.left
-                anchors.leftMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
+                implicitHeight: 34
+                color: Theme.base
 
-                Widgets.Workspaces {
+                Row {
+                    id: leftRow
+                    spacing: 8
+                    anchors.left: parent.left
+                    anchors.leftMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    Widgets.Workspaces {
+                        niriService: niriSvc
+                        screen: screenScope.modelData
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        id: sepLeft1
+                        text: "•"
+                        color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
+                        visible: wifiWidget.visible || brightnessWidget.visible || volumeWidget.visible
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Widgets.Wifi {
+                        id: wifiWidget
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        id: sepLeft2
+                        text: "•"
+                        color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
+                        visible: wifiWidget.visible && brightnessWidget.visible
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Widgets.Brightness {
+                        id: brightnessWidget
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        onToggleRequested: {
+                            volumeWidget.closePopup();
+                            brightnessWidget.togglePopup();
+                        }
+                    }
+
+                    Text {
+                        id: sepLeft3
+                        text: "•"
+                        color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
+                        visible: volumeWidget.visible && (wifiWidget.visible || brightnessWidget.visible)
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Widgets.Volume {
+                        id: volumeWidget
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        onToggleRequested: {
+                            brightnessWidget.closePopup();
+                            volumeWidget.togglePopup();
+                        }
+                    }
+                }
+
+                Widgets.FocusedApp {
                     niriService: niriSvc
-                    screen: panel.modelData
+                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-                Text {
-                    id: sepLeft1
-                    text: "•"
-                    color: Theme.overlay0
-                    font.family: Config.Theme.monoFontFamily
-                    font.pixelSize: Config.Theme.fontSize
-                    visible: wifiWidget.visible || brightnessWidget.visible || volumeWidget.visible
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Widgets.Wifi {
-                    id: wifiWidget
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Text {
-                    id: sepLeft2
-                    text: "•"
-                    color: Theme.overlay0
-                    font.family: Config.Theme.monoFontFamily
-                    font.pixelSize: Config.Theme.fontSize
-                    visible: wifiWidget.visible && brightnessWidget.visible
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Widgets.Brightness {
-                    id: brightnessWidget
+                Row {
+                    id: statsRow
+                    spacing: 8
+                    height: parent.height
+                    anchors.right: parent.right
+                    anchors.rightMargin: 12
                     anchors.verticalCenter: parent.verticalCenter
 
-                    onToggleRequested: {
-                        volumeWidget.closePopup();
-                        brightnessWidget.togglePopup();
+                    Item {
+                        width: cpu.implicitWidth
+                        height: statsRow.height
+
+                        Widgets.Cpu {
+                            id: cpu
+                            anchors.centerIn: parent
+                        }
+                    }
+
+                    Item {
+                        width: sepRigth1.implicitWidth
+                        height: statsRow.height
+
+                        Text {
+                            id: sepRigth1
+                            anchors.centerIn: parent
+                            text: "•"
+                            visible: cpu.visible || mem.visible
+                            color: Theme.overlay0
+                            font.family: Config.Theme.monoFontFamily
+                            font.pixelSize: Config.Theme.fontSize
+                        }
+                    }
+
+                    Item {
+                        width: mem.implicitWidth
+                        height: statsRow.height
+
+                        Widgets.Memory {
+                            id: mem
+                            anchors.centerIn: parent
+                        }
+                    }
+
+                    Item {
+                        width: sepRigth2.implicitWidth
+                        height: statsRow.height
+
+                        Text {
+                            id: sepRigth2
+                            anchors.centerIn: parent
+                            text: "•"
+                            visible: mem.visible || amd.visible
+                            color: Theme.overlay0
+                            font.family: Config.Theme.monoFontFamily
+                            font.pixelSize: Config.Theme.fontSize
+                        }
+                    }
+
+                    Item {
+                        width: amd.implicitWidth
+                        height: statsRow.height
+
+                        Widgets.AmdGpu {
+                            id: amd
+                            anchors.centerIn: parent
+                        }
+                    }
+
+                    Item {
+                        width: sepRigth3.implicitWidth
+                        height: statsRow.height
+
+                        Text {
+                            id: sepRigth3
+                            anchors.centerIn: parent
+                            text: "•"
+                            visible: amd.visible || nvidia.visible
+                            color: Theme.overlay0
+                            font.family: Config.Theme.monoFontFamily
+                            font.pixelSize: Config.Theme.fontSize
+                        }
+                    }
+
+                    Item {
+                        width: nvidia.implicitWidth
+                        height: statsRow.height
+
+                        Widgets.NvidiaGpu {
+                            id: nvidia
+                            anchors.centerIn: parent
+                        }
+                    }
+
+                    Item {
+                        width: sepRigth4.implicitWidth
+                        height: statsRow.height
+
+                        Text {
+                            id: sepRigth4
+                            anchors.centerIn: parent
+                            text: "•"
+                            visible: nvidia.visible || bat.visible
+                            color: Theme.overlay0
+                            font.family: Config.Theme.monoFontFamily
+                            font.pixelSize: Config.Theme.fontSize
+                        }
+                    }
+
+                    Item {
+                        width: bat.implicitWidth
+                        height: statsRow.height
+
+                        Widgets.Battery {
+                            id: bat
+                            anchors.centerIn: parent
+                        }
+                    }
+
+                    Item {
+                        width: sepRigth5.implicitWidth
+                        height: statsRow.height
+
+                        Text {
+                            id: sepRigth5
+                            anchors.centerIn: parent
+                            text: "•"
+                            visible: bat.visible || clock.visible
+                            color: Theme.overlay0
+                            font.family: Config.Theme.monoFontFamily
+                            font.pixelSize: Config.Theme.fontSize
+                        }
+                    }
+
+                    Item {
+                        width: clock.implicitWidth
+                        height: statsRow.height
+
+                        Widgets.ClockWidget {
+                            id: clock
+                            anchors.centerIn: parent
+                        }
                     }
                 }
 
-                Text {
-                    id: sepLeft3
-                    text: "•"
-                    color: Theme.overlay0
-                    font.family: Config.Theme.monoFontFamily
-                    font.pixelSize: Config.Theme.fontSize
-                    visible: volumeWidget.visible && (wifiWidget.visible || brightnessWidget.visible)
-                    anchors.verticalCenter: parent.verticalCenter
-                }
-
-                Widgets.Volume {
-                    id: volumeWidget
-                    anchors.verticalCenter: parent.verticalCenter
-
-                    onToggleRequested: {
-                        brightnessWidget.closePopup();
-                        volumeWidget.togglePopup();
-                    }
-                }
-            }
-
-            Widgets.FocusedApp {
-                niriService: niriSvc
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Row {
-                id: statsRow
-                spacing: 8
-                height: parent.height
-                anchors.right: parent.right
-                anchors.rightMargin: 12
-                anchors.verticalCenter: parent.verticalCenter
-
-                Item {
-                    width: cpu.implicitWidth
-                    height: statsRow.height
-
-                    Widgets.Cpu {
-                        id: cpu
-                        anchors.centerIn: parent
-                    }
-                }
-
-                Item {
-                    width: sepRigth1.implicitWidth
-                    height: statsRow.height
-
-                    Text {
-                        id: sepRigth1
-                        anchors.centerIn: parent
-                        text: "•"
-                        visible: cpu.visible || mem.visible
-                        color: Theme.overlay0
-                        font.family: Config.Theme.monoFontFamily
-                        font.pixelSize: Config.Theme.fontSize
-                    }
-                }
-
-                Item {
-                    width: mem.implicitWidth
-                    height: statsRow.height
-
-                    Widgets.Memory {
-                        id: mem
-                        anchors.centerIn: parent
-                    }
-                }
-
-                Item {
-                    width: sepRigth2.implicitWidth
-                    height: statsRow.height
-
-                    Text {
-                        id: sepRigth2
-                        anchors.centerIn: parent
-                        text: "•"
-                        visible: mem.visible || amd.visible
-                        color: Theme.overlay0
-                        font.family: Config.Theme.monoFontFamily
-                        font.pixelSize: Config.Theme.fontSize
-                    }
-                }
-
-                Item {
-                    width: amd.implicitWidth
-                    height: statsRow.height
-
-                    Widgets.AmdGpu {
-                        id: amd
-                        anchors.centerIn: parent
-                    }
-                }
-
-                Item {
-                    width: sepRigth3.implicitWidth
-                    height: statsRow.height
-
-                    Text {
-                        id: sepRigth3
-                        anchors.centerIn: parent
-                        text: "•"
-                        visible: amd.visible || nvidia.visible
-                        color: Theme.overlay0
-                        font.family: Config.Theme.monoFontFamily
-                        font.pixelSize: Config.Theme.fontSize
-                    }
-                }
-
-                Item {
-                    width: nvidia.implicitWidth
-                    height: statsRow.height
-
-                    Widgets.NvidiaGpu {
-                        id: nvidia
-                        anchors.centerIn: parent
-                    }
-                }
-
-                Item {
-                    width: sepRigth4.implicitWidth
-                    height: statsRow.height
-
-                    Text {
-                        id: sepRigth4
-                        anchors.centerIn: parent
-                        text: "•"
-                        visible: nvidia.visible || bat.visible
-                        color: Theme.overlay0
-                        font.family: Config.Theme.monoFontFamily
-                        font.pixelSize: Config.Theme.fontSize
-                    }
-                }
-
-                Item {
-                    width: bat.implicitWidth
-                    height: statsRow.height
-
-                    Widgets.Battery {
-                        id: bat
-                        anchors.centerIn: parent
-                    }
-                }
-
-                Item {
-                    width: sepRigth5.implicitWidth
-                    height: statsRow.height
-
-                    Text {
-                        id: sepRigth5
-                        anchors.centerIn: parent
-                        text: "•"
-                        visible: bat.visible || clock.visible
-                        color: Theme.overlay0
-                        font.family: Config.Theme.monoFontFamily
-                        font.pixelSize: Config.Theme.fontSize
-                    }
-                }
-
-                Item {
-                    width: clock.implicitWidth
-                    height: statsRow.height
-
-                    Widgets.ClockWidget {
-                        id: clock
-                        anchors.centerIn: parent
-                    }
+                Widgets.Notifications {
+                    screen: screenScope.modelData
+                    topMargin: panel.height + 4
+                    rightMargin: 4
                 }
             }
         }
