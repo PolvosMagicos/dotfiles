@@ -3,5 +3,5 @@ pragma Singleton
 import QtQuick
 
 QtObject {
-    property int notificationTimeoutMs: 5000
+    property int notificationTimeoutMs: 10000
 }
