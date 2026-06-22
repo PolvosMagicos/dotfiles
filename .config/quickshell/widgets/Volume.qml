@@ -78,10 +78,24 @@ Item {
         root.popupVisible = !root.popupVisible;
     }
 
+    onPopupVisibleChanged: {
+        if (root.popupVisible)
+            popupCloseTimer.restart();
+        else
+            popupCloseTimer.stop();
+    }
+
+    Timer {
+        id: popupCloseTimer
+        interval: 5000
+        repeat: false
+        onTriggered: root.closePopup()
+    }
+
     Local.PopupSlider {
         id: popup
 
-        anchorItem: root
+        anchorItem: content
         anchorWindow: QsWindow.window
         label: "Volume"
         iconSource: volumeIcon.source
@@ -89,7 +103,7 @@ Item {
         accent: Theme.blue
         value: root.vol
         sliderEnabled: !!root.audioNode
-        visible: root.popupVisible && root.visible
+        open: root.popupVisible && root.visible
 
         streamModel: sinkLinks.linkGroups
 
@@ -97,6 +111,10 @@ Item {
             if (!visible && root.popupVisible)
                 root.popupVisible = false;
         }
+
+        onDismissed: root.popupVisible = false
+
+        onSliderInteracted: popupCloseTimer.restart()
 
         onValueDragged: function (value) {
             if (root.audioNode) {

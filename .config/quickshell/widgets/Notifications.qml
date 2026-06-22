@@ -1,5 +1,4 @@
 import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Services.Notifications
 import QtQuick
@@ -14,6 +13,44 @@ Scope {
     property int topMargin: 12
     property int rightMargin: 12
     property bool centerOpen: false
+    property bool centerMounted: false
+
+    onCenterOpenChanged: {
+        if (root.centerOpen) {
+            centerCloseTimer.stop();
+            clearAllCloseTimer.stop();
+            centerAutoCloseTimer.restart();
+            root.centerMounted = true;
+        } else if (root.centerMounted) {
+            clearAllCloseTimer.stop();
+            centerAutoCloseTimer.stop();
+            centerCloseTimer.restart();
+        } else {
+            clearAllCloseTimer.stop();
+            centerAutoCloseTimer.stop();
+        }
+    }
+
+    Timer {
+        id: centerCloseTimer
+        interval: 135
+        repeat: false
+        onTriggered: root.centerMounted = false
+    }
+
+    Timer {
+        id: centerAutoCloseTimer
+        interval: 10000
+        repeat: false
+        onTriggered: root.hide()
+    }
+
+    Timer {
+        id: clearAllCloseTimer
+        interval: 500
+        repeat: false
+        onTriggered: root.hide()
+    }
 
     ListModel {
         id: notificationsHistory
@@ -38,17 +75,16 @@ Scope {
         }
     }
 
-    IpcHandler {
-        target: "notifications"
-        function toggle(): void {
-            root.centerOpen = !root.centerOpen;
-        }
-        function show(): void {
-            root.centerOpen = true;
-        }
-        function hide(): void {
-            root.centerOpen = false;
-        }
+    function toggle(): void {
+        root.centerOpen = !root.centerOpen;
+    }
+
+    function show(): void {
+        root.centerOpen = true;
+    }
+
+    function hide(): void {
+        root.centerOpen = false;
     }
 
     PanelWindow {
@@ -79,17 +115,75 @@ Scope {
                 delegate: Rectangle {
                     id: notificationCard
                     required property var modelData
+                    property bool open: false
+                    property bool closing: false
 
                     Layout.fillWidth: true
-                    Layout.preferredHeight: contentCardLayout.implicitHeight + 20
+                    Layout.preferredHeight: open ? contentCardLayout.implicitHeight + 20 : 0
                     radius: 8
                     color: Theme.surface0
                     border.width: 1
                     border.color: modelData.urgency === NotificationUrgency.Critical ? Theme.red : Theme.blue
+                    opacity: open ? 1 : 0
+                    scale: open ? 1 : 0.98
+                    transformOrigin: Item.TopRight
+                    clip: true
+                    transform: Translate {
+                        id: notificationMotion
+                        y: notificationCard.open ? 0 : -8
+
+                        Behavior on y {
+                            NumberAnimation {
+                                duration: 135
+                                easing.type: Easing.OutCubic
+                            }
+                        }
+                    }
+
+                    function closeAnimated() {
+                        if (closing)
+                            return;
+
+                        closing = true;
+                        open = false;
+                        dismissTimer.restart();
+                    }
+
+                    Component.onCompleted: Qt.callLater(() => {
+                        notificationCard.open = true;
+                    })
+
+                    Behavior on Layout.preferredHeight {
+                        NumberAnimation {
+                            duration: 135
+                            easing.type: Easing.OutCubic
+                        }
+                    }
+
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 110
+                            easing.type: Easing.OutCubic
+                        }
+                    }
+
+                    Behavior on scale {
+                        NumberAnimation {
+                            duration: 135
+                            easing.type: Easing.OutCubic
+                        }
+                    }
 
                     Timer {
                         interval: Config.AppConfig.notificationTimeoutMs
                         running: Config.AppConfig.notificationTimeoutMs > 0
+                        repeat: false
+                        onTriggered: notificationCard.closeAnimated()
+                    }
+
+                    Timer {
+                        id: dismissTimer
+                        interval: 135
                         repeat: false
                         onTriggered: notificationCard.modelData.dismiss()
                     }
@@ -148,7 +242,7 @@ Scope {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: notificationCard.modelData.dismiss()
+                        onClicked: notificationCard.closeAnimated()
                     }
                 }
             }
@@ -161,7 +255,7 @@ Scope {
         readonly property int maxHistoryHeight: Math.max(80, maxCenterHeight - 82)
 
         screen: root.screen
-        visible: root.centerOpen
+        visible: root.centerMounted
         anchors {
             top: true
             right: true
@@ -178,11 +272,39 @@ Scope {
         exclusionMode: ExclusionMode.Ignore
 
         Rectangle {
+            opacity: root.centerOpen ? 1 : 0
+            scale: root.centerOpen ? 1 : 0.98
+            transformOrigin: Item.TopRight
             anchors.fill: parent
             radius: 10
             color: Theme.base
             border.width: 2
             border.color: Theme.lavender
+            transform: Translate {
+                id: centerMotion
+                y: root.centerOpen ? 0 : -8
+
+                Behavior on y {
+                    NumberAnimation {
+                        duration: 135
+                        easing.type: Easing.OutCubic
+                    }
+                }
+            }
+
+            Behavior on scale {
+                NumberAnimation {
+                    duration: 135
+                    easing.type: Easing.OutCubic
+                }
+            }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: 110
+                    easing.type: Easing.OutCubic
+                }
+            }
 
             ColumnLayout {
                 id: notificationsCenterColumn
@@ -211,7 +333,11 @@ Scope {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: notificationsHistory.clear()
+                            onClicked: {
+                                notificationsHistory.clear();
+                                if (root.centerOpen)
+                                    clearAllCloseTimer.restart();
+                            }
                         }
                     }
                 }

@@ -51,23 +51,45 @@ Item {
         applyTimer.restart();
     }
 
+    onPopupVisibleChanged: {
+        if (root.popupVisible)
+            popupCloseTimer.restart();
+        else
+            popupCloseTimer.stop();
+    }
+
+    Timer {
+        id: popupCloseTimer
+        interval: 5000
+        repeat: false
+        onTriggered: root.closePopup()
+    }
+
     Row {
         id: content
         spacing: 4
         anchors.centerIn: parent
 
-        Text {
-            text: root.iconGlyph
-            color: root.canSet ? Theme.text : Theme.overlay0
-            opacity: root.canSet ? 1.0 : 0.65
-            font.family: Config.Theme.monoFontFamily
-            font.pixelSize: Config.Theme.fontSize
-            font.weight: 700
+        Item {
+            width: 16
+            height: brightnessIcon.implicitHeight
             anchors.verticalCenter: parent.verticalCenter
+
+            Text {
+                id: brightnessIcon
+
+                anchors.centerIn: parent
+                text: root.iconGlyph
+                color: root.canSet ? Theme.text : Theme.overlay0
+                opacity: root.canSet ? 1.0 : 0.65
+                font.family: Config.Theme.monoFontFamily
+                font.pixelSize: Config.Theme.fontSize
+                font.weight: 700
+            }
         }
 
         Text {
-            text: ` ${Math.round(root.pct * 100)}%`
+            text: `${Math.round(root.pct * 100)}%`
             color: root.canSet ? Theme.text : Theme.overlay0
             font.family: Config.Theme.monoFontFamily
             font.pixelSize: Config.Theme.fontSize
@@ -183,7 +205,7 @@ Item {
     Local.PopupSlider {
         id: popup
 
-        anchorItem: root
+        anchorItem: content
         anchorWindow: QsWindow.window
         label: "Brightness"
         iconText: root.iconGlyph
@@ -192,14 +214,20 @@ Item {
         value: root.pct
         sliderEnabled: root.canSet
         iconPixelSize: 19
-        visible: root.popupVisible && root.visible
+        open: root.popupVisible && root.visible
 
         onVisibleChanged: {
             if (!visible && root.popupVisible)
                 root.popupVisible = false;
         }
 
-        onValueDragged: root.scheduleSet(value)
+        onDismissed: root.popupVisible = false
+
+        onSliderInteracted: popupCloseTimer.restart()
+
+        onValueDragged: function (value) {
+            root.scheduleSet(value);
+        }
     }
 
     MouseArea {

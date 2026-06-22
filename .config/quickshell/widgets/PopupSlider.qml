@@ -20,14 +20,19 @@ PopupWindow {
     property real value: 0
     property bool sliderEnabled: true
     property int iconPixelSize: 16
+    property bool open: false
+    property bool mounted: false
 
     // Pass sinkLinks.linkGroups here.
     property var streamModel: null
 
     signal valueDragged(real value)
+    signal dismissed()
+    signal sliderInteracted()
 
     color: "transparent"
-    grabFocus: true
+    grabFocus: root.mounted
+    visible: root.mounted
 
     implicitWidth: frame.implicitWidth
     implicitHeight: frame.implicitHeight
@@ -39,7 +44,10 @@ PopupWindow {
         if (!root.anchorWindow || !root.anchorItem)
             return;
 
-        const point = root.anchorWindow.mapFromItem(root.anchorItem, Math.round((root.anchorItem.width - root.implicitWidth) / 2), root.anchorItem.height + 8);
+        const anchorWidth = root.anchorItem.width > 0 ? root.anchorItem.width : root.anchorItem.implicitWidth;
+        const anchorHeight = root.anchorItem.height > 0 ? root.anchorItem.height : root.anchorItem.implicitHeight;
+        const popupWidth = root.implicitWidth > 0 ? root.implicitWidth : frame.implicitWidth;
+        const point = root.anchorWindow.mapFromItem(root.anchorItem, Math.round((anchorWidth - popupWidth) / 2), anchorHeight + 8);
 
         anchor.rect.x = Math.round(point.x);
         anchor.rect.y = Math.round(point.y);
@@ -80,6 +88,30 @@ PopupWindow {
         const icon = props["application.icon-name"] || props["media.icon-name"] || props["application.process.binary"] || "application-x-executable-symbolic";
 
         return Quickshell.iconPath(icon, true);
+    }
+
+    onOpenChanged: {
+        if (root.open) {
+            closeAnimation.stop();
+            root.mounted = true;
+        } else if (root.mounted) {
+            closeAnimation.restart();
+        }
+    }
+
+    onBackingWindowVisibleChanged: {
+        if (!backingWindowVisible && root.open) {
+            root.mounted = false;
+            root.dismissed();
+        }
+    }
+
+    SequentialAnimation {
+        id: closeAnimation
+        PauseAnimation {
+            duration: 135
+        }
+        onFinished: root.mounted = false
     }
 
     component VolumeSlider: Item {
@@ -158,12 +190,37 @@ PopupWindow {
 
         width: implicitWidth
         height: implicitHeight
+        y: root.open ? 0 : -8
+        opacity: root.open ? 1 : 0
+        scale: root.open ? 1 : 0.98
+        transformOrigin: Item.TopRight
         implicitWidth: 260
         implicitHeight: body.implicitHeight + 24
         radius: 12
         color: Theme.surface0
         border.width: 1
         border.color: Theme.surface2
+
+        Behavior on y {
+            NumberAnimation {
+                duration: 135
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: 110
+                easing.type: Easing.OutCubic
+            }
+        }
+
+        Behavior on scale {
+            NumberAnimation {
+                duration: 135
+                easing.type: Easing.OutCubic
+            }
+        }
 
         Column {
             id: body
@@ -221,6 +278,7 @@ PopupWindow {
                 sliderEnabled: root.sliderEnabled
 
                 onValueDragged: function (nextValue) {
+                    root.sliderInteracted();
                     root.valueDragged(nextValue);
                 }
             }
@@ -316,6 +374,8 @@ PopupWindow {
                         sliderEnabled: !!appEntry.audio
 
                         onValueDragged: function (nextValue) {
+                            root.sliderInteracted();
+
                             if (appEntry.audio) {
                                 appEntry.audio.muted = false;
                                 appEntry.audio.volume = nextValue;

@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 import Quickshell
+import Quickshell.Io
 import QtQuick
 import Niri 0.1
 import ".." as Config
@@ -10,6 +11,29 @@ Scope {
     Niri {
         id: niriSvc
         Component.onCompleted: connect()
+    }
+
+    Widgets.Notifications {
+        id: notifications
+        screen: Quickshell.screens[0]
+        topMargin: 38
+        rightMargin: 4
+    }
+
+    IpcHandler {
+        target: "notifications"
+
+        function toggle(): void {
+            notifications.toggle();
+        }
+
+        function show(): void {
+            notifications.show();
+        }
+
+        function hide(): void {
+            notifications.hide();
+        }
     }
 
     Variants {
@@ -250,12 +274,6 @@ Scope {
                             anchors.centerIn: parent
                         }
                     }
-                }
-
-                Widgets.Notifications {
-                    screen: screenScope.modelData
-                    topMargin: panel.height + 4
-                    rightMargin: 4
                 }
             }
         }
