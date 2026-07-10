@@ -99,17 +99,58 @@ if ($env.FNM_MULTISHELL_PATH? | is-not-empty) {
 add_path ($env.HOME | path join ".local" "share" "fnm")
 
 # -------------------------
-# Java (SDKMAN)
+# Java (NixOS)
 # -------------------------
-$env.JAVA_HOME = ($env.HOME | path join ".sdkman" "candidates" "java" "current")
-add_path ($env.JAVA_HOME | path join "bin")
+let javac_commands = (
+  which javac
+  | where type == "external"
+)
+
+if not ($javac_commands | is-empty) {
+  let javac_path = (
+    $javac_commands
+    | get path
+    | first
+  )
+
+  let javac_real_path = (
+    ^readlink -f $javac_path
+    | str trim
+  )
+
+  $env.JAVA_HOME = (
+    $javac_real_path
+    | path dirname
+    | path dirname
+  )
+
+  add_path ($env.JAVA_HOME | path join "bin")
+}
 
 # -------------------------
 # Android SDK
 # -------------------------
-$env.ANDROID_HOME = ($env.HOME | path join "Android" "Sdk")
-add_path ($env.ANDROID_HOME | path join "emulator")
-add_path ($env.ANDROID_HOME | path join "platform-tools")
+$env.ANDROID_HOME = (
+  $env.HOME
+  | path join "Android" "Sdk"
+)
+
+$env.ANDROID_SDK_ROOT = $env.ANDROID_HOME
+
+add_path (
+  $env.ANDROID_HOME
+  | path join "cmdline-tools" "latest" "bin"
+)
+
+add_path (
+  $env.ANDROID_HOME
+  | path join "platform-tools"
+)
+
+add_path (
+  $env.ANDROID_HOME
+  | path join "emulator"
+)
 
 # -------------------------
 # Flutter
