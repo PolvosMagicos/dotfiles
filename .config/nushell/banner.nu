@@ -1,5 +1,5 @@
 def welcome [] {
-  let image_path = $"($env.HOME)/dotfiles/assets/profile-pictures/Asuka.png"
+  let image_path = $"($env.HOME)/dotfiles/assets/profile-pictures/asuka-2026.png"
 
   # Gather info
   let ver = (version)
