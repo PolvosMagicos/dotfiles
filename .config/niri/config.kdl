@@ -125,7 +125,7 @@ output "ASUSTek COMPUTER INC PA278QV LCLMQS146583" {
 // https://yalter.github.io/niri/Configuration:-Layout
 layout {
     // Set gaps around windows in logical pixels.
-    gaps 6
+    gaps 8
 
     // When to center a column when changing focus, options are:
     // - "never", default behavior, focusing an off-screen column will keep at the left
@@ -133,7 +133,8 @@ layout {
     // - "always", the focused column will always be centered.
     // - "on-overflow", focusing a column will center it if it doesn't fit
     //   together with the previously focused column.
-    center-focused-column "never"
+    center-focused-column "on-overflow"
+    always-center-single-column
 
     // You can customize the widths that "switch-preset-column-width" (Mod+R) toggles between.
     preset-column-widths {
@@ -229,7 +230,7 @@ layout {
     // You can enable drop shadows for windows.
     shadow {
         // Uncomment the next line to enable shadows.
-        // on
+        on
 
         // By default, the shadow draws only around its window, and not behind it.
         // Uncomment this setting to make the shadow draw behind its window.
@@ -251,16 +252,16 @@ layout {
         // pixels and match the CSS box-shadow properties.
 
         // Softness controls the shadow blur radius.
-        softness 30
+        softness 24
 
         // Spread expands the shadow.
-        spread 5
+        spread 2
 
         // Offset moves the shadow relative to the window.
-        offset x=0 y=5
+        offset x=0 y=4
 
         // You can also change the shadow color and opacity.
-        color "#0007"
+        color "#0008"
     }
 
     // Struts shrink the area occupied by windows, similarly to layer-shell panels.
@@ -318,7 +319,49 @@ animations {
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
-    // slowdown 3.0
+    slowdown 0.8
+
+    workspace-switch {
+        spring damping-ratio=0.92 stiffness=750 epsilon=0.0001
+    }
+
+    horizontal-view-movement {
+        spring damping-ratio=0.95 stiffness=850 epsilon=0.0001
+    }
+
+    window-movement {
+        spring damping-ratio=0.95 stiffness=850 epsilon=0.0001
+    }
+
+    window-resize {
+        spring damping-ratio=0.95 stiffness=850 epsilon=0.0001
+    }
+
+    window-open {
+        duration-ms 170
+        curve "ease-out-expo"
+    }
+
+    window-close {
+        duration-ms 140
+        curve "ease-out-quad"
+    }
+}
+
+recent-windows {
+    open-delay-ms 100
+
+    highlight {
+        active-color "#7fc8ff55"
+        urgent-color "#ff777777"
+        padding 20
+        corner-radius 14
+    }
+
+    previews {
+        max-height 600
+        max-scale 0.6
+    }
 }
 
 // Window rules let you adjust behavior for individual windows.
@@ -360,6 +403,11 @@ window-rule {
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {
     geometry-corner-radius 12
+    clip-to-geometry true
+}
+
+window-rule {
+    geometry-corner-radius 10
     clip-to-geometry true
 }
 
