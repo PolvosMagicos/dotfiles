@@ -288,9 +288,6 @@ layout {
     // Niri has no primary-output setting; start with the ASUS focused instead.
     spawn-at-startup "niri" "msg" "action" "focus-monitor" "ASUSTek COMPUTER INC PA278QV LCLMQS146583"
     
-    // Set background with swaybg
-    spawn-at-startup "swaybg" "-i" "/home/polvos-magicos/dotfiles/assets/wallpapers/shinji-asuka-happy-ending.png" "-m" "fill"
-
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 

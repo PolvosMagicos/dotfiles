@@ -4,5 +4,6 @@ import QtQuick
 import "layout" as Layout
 
 Scope {
+    Layout.Wallpaper {}
     Layout.Bar {}
 }
