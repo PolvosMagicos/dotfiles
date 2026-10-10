@@ -31,7 +31,7 @@ PopupWindow {
     signal sliderInteracted()
 
     color: "transparent"
-    grabFocus: root.mounted
+    grabFocus: true
     visible: root.mounted
 
     implicitWidth: frame.implicitWidth
@@ -99,8 +99,8 @@ PopupWindow {
         }
     }
 
-    onBackingWindowVisibleChanged: {
-        if (!backingWindowVisible && root.open) {
+    onVisibleChanged: {
+        if (!visible && root.open) {
             root.mounted = false;
             root.dismissed();
         }

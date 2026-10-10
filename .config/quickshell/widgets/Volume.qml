@@ -96,7 +96,7 @@ Item {
         id: popup
 
         anchorItem: content
-        anchorWindow: QsWindow.window
+        anchorWindow: root.QsWindow.window
         label: "Volume"
         iconSource: volumeIcon.source
         valueText: root.audioNode ? `${Math.round(root.vol * 100)}%` : ""
@@ -106,11 +106,6 @@ Item {
         open: root.popupVisible && root.visible
 
         streamModel: sinkLinks.linkGroups
-
-        onVisibleChanged: {
-            if (!visible && root.popupVisible)
-                root.popupVisible = false;
-        }
 
         onDismissed: root.popupVisible = false
 

@@ -206,7 +206,7 @@ Item {
         id: popup
 
         anchorItem: content
-        anchorWindow: QsWindow.window
+        anchorWindow: root.QsWindow.window
         label: "Brightness"
         iconText: root.iconGlyph
         valueText: `${Math.round(root.pct * 100)}%`
@@ -215,11 +215,6 @@ Item {
         sliderEnabled: root.canSet
         iconPixelSize: 19
         open: root.popupVisible && root.visible
-
-        onVisibleChanged: {
-            if (!visible && root.popupVisible)
-                root.popupVisible = false;
-        }
 
         onDismissed: root.popupVisible = false
 

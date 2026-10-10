@@ -7,6 +7,7 @@ import Quickshell.Bluetooth as Bluez
 import "widgets" as Widgets
 
 PanelWindow {
+    id: testPanel
     anchors { top: true; left: true }
     exclusionMode: ExclusionMode.Ignore
     implicitWidth: 400
@@ -61,6 +62,14 @@ PanelWindow {
         adapter: null
     }
 
+    Widgets.PopupSlider {
+        id: sliderPopup
+        anchorItem: widget
+        anchorWindow: testPanel
+        iconText: "☀"
+        onDismissed: open = false
+    }
+
     TestCase {
         id: check
         when: false
@@ -68,6 +77,27 @@ PanelWindow {
         function assert(condition, message) {
             if (!condition)
                 throw new Error(message);
+        }
+
+        function test_sliderDismissal() {
+            assert(sliderPopup.grabFocus, "Slider popups grab focus before showing");
+            // shortcut: QtTest clicks lack Wayland input serials, verify real outside clicks manually.
+            sliderPopup.grabFocus = false;
+            for (const label of ["Brightness", "Volume"]) {
+                sliderPopup.label = label;
+                sliderPopup.open = true;
+                wait(200);
+                assert(sliderPopup.backingWindowVisible, label + " popup opens");
+                sliderPopup.visible = false;
+                assert(!sliderPopup.open && !sliderPopup.mounted, label + " popup clears its state on dismissal");
+                sliderPopup.visible = Qt.binding(() => sliderPopup.mounted);
+                sliderPopup.open = true;
+                wait(200);
+                assert(sliderPopup.backingWindowVisible, label + " popup reopens after dismissal");
+                sliderPopup.open = false;
+                wait(200);
+                assert(!sliderPopup.mounted, label + " popup finishes closing");
+            }
         }
 
         function test_control() {
@@ -175,6 +205,7 @@ PanelWindow {
         onTriggered: {
             try {
                 check.test_control();
+                check.test_sliderDismissal();
                 console.log("Bluetooth checks passed");
                 Qt.quit();
             } catch (error) {
