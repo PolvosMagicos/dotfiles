@@ -1,0 +1,186 @@
+//@ pragma IconTheme Papirus
+// Run in a Wayland session with quickshell --path bluetooth-check.qml.
+import QtQuick
+import QtTest
+import Quickshell
+import Quickshell.Bluetooth as Bluez
+import "widgets" as Widgets
+
+PanelWindow {
+    anchors { top: true; left: true }
+    exclusionMode: ExclusionMode.Ignore
+    implicitWidth: 400
+    implicitHeight: 100
+    visible: true
+
+    component FakeDevice: QtObject {
+        property string name: "Test device"
+        property string address: "00:00:00:00:00:00"
+        property string icon: "bluetooth-symbolic"
+        property bool paired: false
+        property bool pairing: false
+        property bool connected: false
+        property bool blocked: false
+        property int state: Bluez.BluetoothDeviceState.Disconnected
+        property int connectCalls: 0
+        property int pairCalls: 0
+        function connect() {
+            connectCalls++;
+            state = Bluez.BluetoothDeviceState.Connecting;
+        }
+        function pair() {
+            pairCalls++;
+            pairing = true;
+        }
+        function cancelPair() {
+            pairing = false;
+        }
+    }
+
+    FakeDevice { id: savedDevice; address: "00:00:00:00:00:01"; paired: true }
+    FakeDevice { id: nearbyDevice; address: "00:00:00:00:00:02" }
+    FakeDevice { id: blockedDevice; address: "00:00:00:00:00:03"; blocked: true }
+
+    QtObject {
+        id: mockAdapter
+        property bool enabled: false
+        property bool discovering: false
+        property int state: enabled ? Bluez.BluetoothAdapterState.Enabled : Bluez.BluetoothAdapterState.Disabled
+        property var devices: [savedDevice, nearbyDevice, blockedDevice]
+    }
+
+    Widgets.Bluetooth {
+        id: widget
+        adapter: mockAdapter
+        pairingAgentReady: true
+        onToggleRequested: togglePopup()
+    }
+
+    Widgets.Bluetooth {
+        id: missingAdapter
+        adapter: null
+    }
+
+    TestCase {
+        id: check
+        when: false
+
+        function assert(condition, message) {
+            if (!condition)
+                throw new Error(message);
+        }
+
+        function test_control() {
+            wait(300);
+            assert(!missingAdapter.visible, "Hide when no adapter is present");
+            assert(widget.visible && !widget.powered, "Display the disabled adapter");
+            assert(widget.width > 16 && widget.height > 0, "Render the icon and status");
+            const popup = findChild(widget, "bluetoothPopup");
+            assert(popup.grabFocus, "Grab focus before showing so outside clicks dismiss the popup");
+            // shortcut: QtTest clicks lack Wayland input serials, verify real outside clicks manually.
+            popup.grabFocus = false;
+            mouseClick(widget, widget.width / 2, widget.height / 2, Qt.RightButton);
+            assert(!mockAdapter.enabled && !widget.popupVisible, "Right-click has no action");
+            mouseClick(widget);
+            wait(200);
+            const powerSwitch = findChild(widget, "bluetoothPowerSwitch");
+            const deviceList = findChild(widget, "bluetoothDeviceList");
+            assert(widget.popupVisible && popup.mounted, "Left-click opens the popup");
+            assert(popup.backingWindowVisible && powerSwitch.visible, "Render the popup and switch");
+            powerSwitch.clicked();
+            wait(200);
+            assert(widget.powered && mockAdapter.discovering, "Switch enables Bluetooth and starts scanning");
+            assert(deviceList.count === 3, "Show saved and nearby devices");
+
+            const savedRow = deviceList.itemAtIndex(0);
+            assert(savedRow !== null, "Render saved-device rows");
+            savedRow.clicked();
+            assert(savedDevice.connectCalls === 1 && widget.pendingDevice === savedDevice, "Click connects a paired device");
+            widget.connectDevice(nearbyDevice);
+            assert(nearbyDevice.pairCalls === 0, "Prevent overlapping attempts");
+            savedDevice.connected = true;
+            savedDevice.state = Bluez.BluetoothDeviceState.Connected;
+            assert(!widget.pendingDevice, "Clear the completed attempt");
+
+            const nearbyRow = deviceList.itemAtIndex(1);
+            assert(nearbyRow !== null, "Render nearby-device rows");
+            nearbyRow.clicked();
+            assert(nearbyDevice.pairCalls === 1 && nearbyDevice.connectCalls === 0, "Pair a new device first");
+            nearbyDevice.paired = true;
+            nearbyDevice.pairing = false;
+            assert(nearbyDevice.connectCalls === 1, "Connect after pairing succeeds");
+            nearbyDevice.connected = true;
+            nearbyDevice.state = Bluez.BluetoothDeviceState.Connected;
+            assert(!widget.pendingDevice, "Finish connecting a new device");
+
+            savedDevice.connected = false;
+            savedDevice.state = Bluez.BluetoothDeviceState.Disconnected;
+            widget.connectDevice(savedDevice);
+            savedDevice.state = Bluez.BluetoothDeviceState.Disconnected;
+            assert(!widget.pendingDevice && widget.errorMessage !== "", "Show connection failures and allow retry");
+            nearbyDevice.connected = false;
+            nearbyDevice.paired = false;
+            nearbyDevice.state = Bluez.BluetoothDeviceState.Disconnected;
+            widget.connectDevice(nearbyDevice);
+            nearbyDevice.pairing = false;
+            assert(!widget.pendingDevice && widget.errorMessage !== "", "Show pairing failures");
+            widget.pairingAgentReady = true;
+            widget.connectDevice(blockedDevice);
+            assert(blockedDevice.pairCalls === 0, "Do not connect blocked devices");
+
+            widget.connectDevice(nearbyDevice);
+            powerSwitch.clicked();
+            assert(!widget.powered && !mockAdapter.discovering && !widget.pendingDevice && !nearbyDevice.pairing, "Power off stops scanning and cancels pending pairing");
+            for (const state of [Bluez.BluetoothAdapterState.Blocked, Bluez.BluetoothAdapterState.Enabling, Bluez.BluetoothAdapterState.Disabling]) {
+                mockAdapter.state = state;
+                assert(!powerSwitch.enabled, "Disable the switch while blocked or transitioning");
+            }
+            mockAdapter.state = Bluez.BluetoothAdapterState.Enabled;
+            mockAdapter.enabled = true;
+            assert(mockAdapter.discovering, "Resume scanning when powered on");
+            widget.closePopup();
+            wait(200);
+            assert(!mockAdapter.discovering && !popup.mounted, "Close the popup and stop its scan");
+            mockAdapter.discovering = true;
+            widget.togglePopup();
+            widget.closePopup();
+            assert(mockAdapter.discovering, "Leave another application's scan running");
+
+            mockAdapter.discovering = false;
+            widget.togglePopup();
+            wait(200);
+            popup.visible = false;
+            assert(!widget.popupVisible && !mockAdapter.discovering, "Synchronize compositor dismissal and stop scanning");
+            popup.visible = Qt.binding(() => popup.mounted);
+            widget.togglePopup();
+            wait(200);
+            assert(popup.backingWindowVisible, "Reopen after outside dismissal");
+            wait(7400);
+            assert(widget.popupVisible, "Keep the popup open until 8 seconds have elapsed");
+            wait(700);
+            assert(!widget.popupVisible && !popup.mounted && !mockAdapter.discovering, "Close after 8 seconds and stop scanning");
+
+            widget.pairingAgentReady = false;
+            widget.connectDevice(nearbyDevice);
+            for (let attempt = 0; attempt < 50 && !nearbyDevice.pairing; ++attempt)
+                wait(100);
+            assert(widget.pairingAgentReady && nearbyDevice.pairing, "Start Blueman's pairing agent before pairing");
+            mockAdapter.enabled = false;
+        }
+    }
+
+    Timer {
+        interval: 100
+        running: true
+        onTriggered: {
+            try {
+                check.test_control();
+                console.log("Bluetooth checks passed");
+                Qt.quit();
+            } catch (error) {
+                console.error(error);
+                Qt.exit(1);
+            }
+        }
+    }
+}

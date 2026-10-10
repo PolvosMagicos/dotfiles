@@ -76,7 +76,7 @@ Scope {
                         color: Theme.overlay0
                         font.family: Config.Theme.monoFontFamily
                         font.pixelSize: Config.Theme.fontSize
-                        visible: wifiWidget.visible || brightnessWidget.visible || volumeWidget.visible
+                        visible: wifiWidget.visible || bluetoothWidget.visible || brightnessWidget.visible || volumeWidget.visible
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
@@ -91,7 +91,27 @@ Scope {
                         color: Theme.overlay0
                         font.family: Config.Theme.monoFontFamily
                         font.pixelSize: Config.Theme.fontSize
-                        visible: wifiWidget.visible && brightnessWidget.visible
+                        visible: wifiWidget.visible && bluetoothWidget.visible
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Widgets.Bluetooth {
+                        id: bluetoothWidget
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        onToggleRequested: {
+                            brightnessWidget.closePopup();
+                            volumeWidget.closePopup();
+                            bluetoothWidget.togglePopup();
+                        }
+                    }
+
+                    Text {
+                        text: "•"
+                        color: Theme.overlay0
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
+                        visible: brightnessWidget.visible && (wifiWidget.visible || bluetoothWidget.visible)
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
@@ -100,6 +120,7 @@ Scope {
                         anchors.verticalCenter: parent.verticalCenter
 
                         onToggleRequested: {
+                            bluetoothWidget.closePopup();
                             volumeWidget.closePopup();
                             brightnessWidget.togglePopup();
                         }
@@ -111,7 +132,7 @@ Scope {
                         color: Theme.overlay0
                         font.family: Config.Theme.monoFontFamily
                         font.pixelSize: Config.Theme.fontSize
-                        visible: volumeWidget.visible && (wifiWidget.visible || brightnessWidget.visible)
+                        visible: volumeWidget.visible && (wifiWidget.visible || bluetoothWidget.visible || brightnessWidget.visible)
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
@@ -120,6 +141,7 @@ Scope {
                         anchors.verticalCenter: parent.verticalCenter
 
                         onToggleRequested: {
+                            bluetoothWidget.closePopup();
                             brightnessWidget.closePopup();
                             volumeWidget.togglePopup();
                         }
