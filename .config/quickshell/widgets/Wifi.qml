@@ -40,6 +40,7 @@ Row {
         id: wifiIcon
         implicitSize: 16
         anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: -2
 
         source: {
             let icon = "";

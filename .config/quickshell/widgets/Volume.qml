@@ -31,6 +31,7 @@ Item {
             id: volumeIcon
             implicitSize: 16
             anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: -2
 
             source: {
                 if (!root.audioNode)

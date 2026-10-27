@@ -155,8 +155,9 @@ Item {
         anchors.centerIn: parent
 
         IconImage {
-            implicitSize: 16
+            implicitSize: 14
             anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: -1
             source: Quickshell.iconPath("bluetooth-symbolic", true)
             layer.enabled: true
             layer.effect: MultiEffect {
@@ -174,7 +175,7 @@ Item {
             color: root.powered ? Theme.text : Theme.overlay0
             font.family: Config.Theme.monoFontFamily
             font.pixelSize: Config.Theme.fontSize
-            font.weight: 700
+            font.weight: 500
             anchors.verticalCenter: parent.verticalCenter
         }
     }
