@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 import QtQuick
+import QtQuick.Controls as Controls
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Pipewire
@@ -25,10 +26,13 @@ PopupWindow {
 
     // Pass sinkLinks.linkGroups here.
     property var streamModel: null
+    property var outputModel: null
+    property var selectedOutput: null
 
     signal valueDragged(real value)
     signal dismissed()
     signal sliderInteracted()
+    signal outputSelected(var node)
 
     color: "transparent"
     grabFocus: true
@@ -85,9 +89,17 @@ PopupWindow {
 
         const props = node.properties || {};
 
-        const icon = props["application.icon-name"] || props["media.icon-name"] || props["application.process.binary"] || "application-x-executable-symbolic";
+        for (const name of [props["application.icon-name"], props["media.icon-name"], props["application.process.binary"]]) {
+            if (name) {
+                const icon = Quickshell.iconPath(name, true);
+                if (icon !== "")
+                    return icon;
+            }
+        }
 
-        return Quickshell.iconPath(icon, true);
+        const appId = props["application.id"] || props["application.process.binary"] || props["application.name"] || "";
+        const entry = DesktopEntries.heuristicLookup(appId) || DesktopEntries.applications.values.find(app => app.id.toLowerCase().startsWith(appId.toLowerCase() + "-"));
+        return (entry && Quickshell.iconPath(entry.icon, true)) || Quickshell.iconPath("application-x-executable-symbolic", true);
     }
 
     onOpenChanged: {
@@ -381,6 +393,63 @@ PopupWindow {
                                 appEntry.audio.volume = nextValue;
                             }
                         }
+                    }
+                }
+            }
+
+            Rectangle {
+                visible: root.outputModel !== null
+                width: parent.width
+                height: 1
+                color: Theme.surface2
+            }
+
+            Text {
+                visible: root.outputModel !== null
+                text: "Output device"
+                color: Theme.subtext1
+                font.family: Config.Theme.monoFontFamily
+                font.pixelSize: Config.Theme.fontSize
+                font.weight: 700
+            }
+
+            ListView {
+                id: outputs
+                objectName: "audioOutputList"
+                visible: root.outputModel !== null
+                width: parent.width
+                height: visible ? Math.min(count * 34, 170) : 0
+                model: root.outputModel
+                clip: true
+                boundsBehavior: Flickable.StopAtBounds
+                Controls.ScrollBar.vertical: Controls.ScrollBar {}
+
+                delegate: Controls.Button {
+                    id: outputButton
+                    required property var modelData
+                    readonly property bool selected: modelData === root.selectedOutput
+                    readonly property string deviceName: modelData.nickname || modelData.description || modelData.name
+                    width: outputs.width
+                    height: 34
+                    padding: 8
+                    Accessible.name: deviceName + (selected ? ", current output" : "")
+                    onClicked: {
+                        root.sliderInteracted();
+                        root.outputSelected(modelData);
+                    }
+                    background: Rectangle {
+                        radius: 8
+                        color: outputButton.selected || outputButton.hovered || outputButton.activeFocus ? Theme.surface1 : "transparent"
+                        border.width: outputButton.activeFocus ? 1 : 0
+                        border.color: root.accent
+                    }
+                    contentItem: Text {
+                        text: (outputButton.selected ? "✓ " : "  ") + outputButton.deviceName
+                        color: outputButton.selected ? root.accent : Theme.text
+                        font.family: Config.Theme.monoFontFamily
+                        font.pixelSize: Config.Theme.fontSize
+                        elide: Text.ElideRight
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
             }

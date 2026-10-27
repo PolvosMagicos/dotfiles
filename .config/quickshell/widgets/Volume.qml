@@ -16,6 +16,7 @@ Item {
     readonly property real vol: root.audioNode ? root.audioNode.volume : 0
     property bool popupVisible: false
     readonly property var streamModel: sinkLinks.linkGroups
+    readonly property var outputs: Pipewire.nodes.values.filter(node => node.audio && node.isSink && !node.isStream)
 
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight
@@ -106,6 +107,10 @@ Item {
         open: root.popupVisible && root.visible
 
         streamModel: sinkLinks.linkGroups
+        outputModel: root.outputs
+        selectedOutput: root.sink
+
+        onOutputSelected: node => Pipewire.preferredDefaultAudioSink = node
 
         onDismissed: root.popupVisible = false
 
