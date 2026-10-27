@@ -21,6 +21,7 @@ Item {
     property string errorMessage: ""
     property bool pairingAgentReady: false
     readonly property bool powered: !!root.adapter && root.adapter.enabled
+    readonly property var connectedDevice: root.powered ? root.adapter.devices.values.find(device => device.connected) : null
     readonly property bool canToggle: !!root.adapter && (root.adapter.state === Bluez.BluetoothAdapterState.Enabled || root.adapter.state === Bluez.BluetoothAdapterState.Disabled)
 
     implicitWidth: content.implicitWidth
@@ -168,7 +169,8 @@ Item {
         }
 
         Text {
-            text: root.adapter ? Bluez.BluetoothAdapterState.toString(root.adapter.state).toLowerCase() : ""
+            objectName: "bluetoothStatus"
+            text: root.connectedDevice ? (root.connectedDevice.name || root.connectedDevice.address) : root.adapter ? Bluez.BluetoothAdapterState.toString(root.adapter.state).toLowerCase() : ""
             color: root.powered ? Theme.text : Theme.overlay0
             font.family: Config.Theme.monoFontFamily
             font.pixelSize: Config.Theme.fontSize

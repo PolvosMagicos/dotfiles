@@ -171,7 +171,7 @@ PopupWindow {
                 clip: true
                 spacing: 4
                 boundsBehavior: Flickable.StopAtBounds
-                model: root.adapter ? root.adapter.devices : null
+                model: root.adapter ? root.adapter.devices.values : null
                 Controls.ScrollBar.vertical: Controls.ScrollBar {}
 
                 delegate: Controls.Button {
@@ -212,8 +212,9 @@ PopupWindow {
                                 font.weight: 700
                             }
                             Text {
+                                objectName: "bluetoothDeviceStatus-" + deviceButton.modelData.address
                                 width: parent.width
-                                text: deviceButton.modelData.blocked ? "Blocked" : deviceButton.modelData.connected ? "Connected" : deviceButton.modelData.pairing ? "Pairing…" : root.pendingDevice === deviceButton.modelData || deviceButton.modelData.state === Bluez.BluetoothDeviceState.Connecting ? "Connecting…" : deviceButton.modelData.paired ? "Paired · Click to connect" : "Click to pair and connect"
+                                text: (deviceButton.modelData.blocked ? "Blocked" : deviceButton.modelData.connected ? "Connected" : deviceButton.modelData.pairing ? "Pairing…" : root.pendingDevice === deviceButton.modelData || deviceButton.modelData.state === Bluez.BluetoothDeviceState.Connecting ? "Connecting…" : deviceButton.modelData.paired ? "Paired · Click to connect" : "Click to pair and connect") + (deviceButton.modelData.connected && deviceButton.modelData.batteryAvailable ? ` · ${Math.round(deviceButton.modelData.battery * 100)}% battery` : "")
                                 elide: Text.ElideRight
                                 color: Theme.subtext1
                                 font.family: Config.Theme.monoFontFamily

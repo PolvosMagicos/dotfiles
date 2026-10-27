@@ -1,5 +1,5 @@
 //@ pragma IconTheme Papirus
-// Run in a Wayland session with quickshell --path bluetooth-check.qml.
+// Run from an isolated copy with quickshell --path bluetooth-check.qml.
 import QtQuick
 import QtTest
 import Quickshell
@@ -22,6 +22,8 @@ PanelWindow {
         property bool pairing: false
         property bool connected: false
         property bool blocked: false
+        property bool batteryAvailable: false
+        property real battery: 0
         property int state: Bluez.BluetoothDeviceState.Disconnected
         property int connectCalls: 0
         property int pairCalls: 0
@@ -47,7 +49,9 @@ PanelWindow {
         property bool enabled: false
         property bool discovering: false
         property int state: enabled ? Bluez.BluetoothAdapterState.Enabled : Bluez.BluetoothAdapterState.Disabled
-        property var devices: [savedDevice, nearbyDevice, blockedDevice]
+        property QtObject devices: QtObject {
+            property var values: [savedDevice, nearbyDevice, blockedDevice]
+        }
     }
 
     Widgets.Bluetooth {
@@ -105,6 +109,8 @@ PanelWindow {
             assert(!missingAdapter.visible, "Hide when no adapter is present");
             assert(widget.visible && !widget.powered, "Display the disabled adapter");
             assert(widget.width > 16 && widget.height > 0, "Render the icon and status");
+            const barStatus = findChild(widget, "bluetoothStatus");
+            assert(barStatus.text === "disabled", "Show the adapter state when powered off");
             const popup = findChild(widget, "bluetoothPopup");
             assert(popup.grabFocus, "Grab focus before showing so outside clicks dismiss the popup");
             // shortcut: QtTest clicks lack Wayland input serials, verify real outside clicks manually.
@@ -120,6 +126,7 @@ PanelWindow {
             powerSwitch.clicked();
             wait(200);
             assert(widget.powered && mockAdapter.discovering, "Switch enables Bluetooth and starts scanning");
+            assert(barStatus.text === "enabled", "Show enabled when no device is connected");
             assert(deviceList.count === 3, "Show saved and nearby devices");
 
             const savedRow = deviceList.itemAtIndex(0);
@@ -131,6 +138,21 @@ PanelWindow {
             savedDevice.connected = true;
             savedDevice.state = Bluez.BluetoothDeviceState.Connected;
             assert(!widget.pendingDevice, "Clear the completed attempt");
+            assert(barStatus.text === savedDevice.name, "Show the connected device name in the bar");
+            savedDevice.name = "Renamed headphones";
+            assert(barStatus.text === "Renamed headphones", "Update the bar when the connected device is renamed");
+            savedDevice.name = "";
+            assert(barStatus.text === savedDevice.address, "Use the address for an unnamed device");
+            savedDevice.name = "Test device";
+            const savedStatus = findChild(savedRow, "bluetoothDeviceStatus-" + savedDevice.address);
+            assert(savedStatus.text === "Connected", "Do not show an unavailable battery level");
+            savedDevice.batteryAvailable = true;
+            savedDevice.battery = 0.42;
+            assert(savedStatus.text === "Connected · 42% battery", "Show the reported battery percentage");
+            savedDevice.battery = 0;
+            assert(savedStatus.text === "Connected · 0% battery", "Keep a reported zero battery visible");
+            savedDevice.batteryAvailable = false;
+            assert(savedStatus.text === "Connected", "Hide the percentage when battery data disappears");
 
             const nearbyRow = deviceList.itemAtIndex(1);
             assert(nearbyRow !== null, "Render nearby-device rows");
@@ -144,11 +166,13 @@ PanelWindow {
             assert(!widget.pendingDevice, "Finish connecting a new device");
 
             savedDevice.connected = false;
+            assert(barStatus.text === nearbyDevice.name, "Show the remaining device after the first disconnects");
             savedDevice.state = Bluez.BluetoothDeviceState.Disconnected;
             widget.connectDevice(savedDevice);
             savedDevice.state = Bluez.BluetoothDeviceState.Disconnected;
             assert(!widget.pendingDevice && widget.errorMessage !== "", "Show connection failures and allow retry");
             nearbyDevice.connected = false;
+            assert(barStatus.text === "enabled", "Restore the adapter state when all devices disconnect");
             nearbyDevice.paired = false;
             nearbyDevice.state = Bluez.BluetoothDeviceState.Disconnected;
             widget.connectDevice(nearbyDevice);
@@ -187,8 +211,7 @@ PanelWindow {
             assert(popup.backingWindowVisible, "Reopen after outside dismissal");
             wait(7400);
             assert(widget.popupVisible, "Keep the popup open until 8 seconds have elapsed");
-            wait(700);
-            assert(!widget.popupVisible && !popup.mounted && !mockAdapter.discovering, "Close after 8 seconds and stop scanning");
+            tryVerify(() => !widget.popupVisible && !popup.mounted && !mockAdapter.discovering, 1500, "Close after 8 seconds and stop scanning");
 
             widget.pairingAgentReady = false;
             widget.connectDevice(nearbyDevice);
