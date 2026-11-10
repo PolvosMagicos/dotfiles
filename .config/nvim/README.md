@@ -5,10 +5,15 @@ See the [repository setup](../../README.md) for this branch's installation steps
 
 ## Requirements and first launch
 
-Install Neovim and the tools below through the companion Nix configuration,
-then let Home Manager link this directory to `~/.config/nvim`. The QML server
-also needs Qt's `qmlls` and project import paths; the Quickshell configuration
-has its own [editor notes](../quickshell/README.md).
+On NixOS, Nix manages Neovim, language servers, formatters and linters. Declare
+the tools you use in your Nix package configuration and activate it, then let
+Home Manager link this directory to `~/.config/nvim`. Server definitions use
+executable names resolved from Neovim's `PATH`; the tables below list command
+names, which can differ from Nix package names.
+
+`lazy.nvim` manages editor plugins. Mason is archived and does not install
+language servers. The QML server also needs Qt's `qmlls` and project import paths;
+the Quickshell configuration has its own [editor notes](../quickshell/README.md).
 
 Use Neovim 0.12 or newer for the plugin stack documented by this repository.
 Install the external commands for the features you use:
@@ -51,7 +56,6 @@ provider (`wl-clipboard` in a Wayland session, or macOS clipboard tools).
 
 [lsp-config.lua](lua/polvos-magicos/plugins/lsp/lsp-config.lua) loads each Lua file
 in `servers/`, defines it with `vim.lsp.config`, and enables it with `vim.lsp.enable`.
-Mason is archived; it does not install servers for this setup.
 
 | Language | Command or integration |
 | --- | --- |
