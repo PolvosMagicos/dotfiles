@@ -3,6 +3,13 @@
 Standalone terminal audio visualizer. See the [repository setup](../../README.md)
 for package installation and config linking.
 
+## macOS setup
+
+The [Brewfile](../../Brewfile) installs `cava`; link this directory with Stow.
+The file is identical on `nixos`, but capture depends on the macOS build and
+available audio devices. This config does not set up system-output capture;
+a loopback device may be needed to capture that audio.
+
 ## Configuration
 
 [config](config) is a commented reference configuration: only section headers
@@ -17,8 +24,7 @@ cava
 ```
 
 Choose the capture backend and source in the `[input]` section if the default
-is silent. Available backends depend on the installed Cava build. On macOS,
-capturing system output can require a loopback device.
+is silent. Available backends depend on the installed Cava build.
 
 ## Relationship to the music setup
 

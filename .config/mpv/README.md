@@ -3,6 +3,13 @@
 Video player settings in [mpv.conf](mpv.conf). Install `mpv` and link this
 directory using the [repository setup](../../README.md).
 
+## macOS setup
+
+The [Brewfile](../../Brewfile) installs `mpv`; link this directory with Stow. Both
+branches use the same active playback options; their config differences are
+comments and whitespace. Hardware decoding depends on the installed macOS MPV
+build and hardware. No backend-specific decoding method is forced by this file.
+
 ## Active settings
 
 | Option | Purpose |

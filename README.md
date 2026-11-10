@@ -23,6 +23,26 @@ Shared application configs live in [`.config/`](.config). This branch excludes
 Quickshell, Niri, Fuzzel, systemd services, Linux container settings, Nix commands
 and the QML/Nix desktop editor tooling.
 
+## Platform differences
+
+These are the differences in the checked-in branches. Individual guides below
+cover the setup and machine-specific paths for each config.
+
+| Area | NixOS | macOS |
+| --- | --- | --- |
+| Packages and config links | Nix packages; Home Manager links application configs | Homebrew/Brewfile; Stow with `--no-folding` |
+| Nushell config location | `~/.config/nushell` | Native Application Support directory linked to `~/.config/nushell` |
+| Nushell development paths | Java resolved from `javac`; Android set to `~/Android/Sdk` | Registered macOS JDK discovery; preserves `JAVA_HOME`/`ANDROID_HOME`; Android SDK or Homebrew fallback |
+| Nushell startup and helpers | Nix rebuild/update/cleanup commands; banner called by `env.nu` | Homebrew PATH initialized first; interactive banner with Kitty checks; no Nix helpers |
+| Kitty | `nu` resolved from the Nix-provided PATH | Adds Apple Silicon and Intel Homebrew executable search paths |
+| MPD | `pulse` output for PulseAudio/PipeWire compatibility; saved systemd unit needs adaptation | `osx` output for CoreAudio; installer starts no service |
+| Cava | Build-selected capture backend for the Linux audio setup | Build-selected capture backend; system audio capture may need a loopback device |
+| rmpc | Same socket, FIFO and client settings as macOS | Same socket, FIFO and client settings as NixOS |
+| MPV | Same active playback settings as macOS; decoding depends on the installed build/GPU | Same active playback settings as NixOS; decoding depends on the installed build/GPU |
+| Yazi | Custom `M` mount manager; archive Git link needs separate initialization | Archive submodule; no custom mount manager or `M` binding |
+| Desktop and system configs | Niri, Quickshell, Fuzzel, container settings and saved systemd files | Those configs are omitted |
+| Keyboard layouts | Vial installed through Nix; shared layout exports | Vial installed separately; same layout exports |
+
 ## Configuration guides
 
 Each config has its own setup, dependencies and usage notes:
@@ -137,7 +157,8 @@ shared with `nixos`. A QWERTY export is also included.
 [`assets/`](assets) contains wallpapers, profile pictures and screenshots;
 [`firefox/`](firefox) keeps older browser customizations for reference. These
 directories and keyboard exports stay in the checkout and are used manually.
-Kitty's background and the Nushell banner expect the checkout at `~/dotfiles`.
+Kitty's background expects the checkout at `~/dotfiles`. The Nushell banner
+resolves its image relative to its config source.
 
 Stow excludes generated MPD state and shell backups. The existing MPD database
 is still tracked by Git; review local data before committing changes.

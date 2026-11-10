@@ -86,4 +86,6 @@ run `fnm install --lts` and `fnm default lts-latest`. Android platforms, license
 Xcode/iOS and ESP setup remain project-specific.
 
 The banner runs only in interactive sessions and uses Kitty image display when
-available. This branch has no NixOS rebuild or cleanup commands.
+available. Its image is resolved relative to `banner.nu`; the NixOS branch uses
+a fixed path under `~/dotfiles/assets` and calls the banner without these guards.
+This branch has no NixOS rebuild or cleanup commands.

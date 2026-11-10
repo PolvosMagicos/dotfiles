@@ -4,6 +4,13 @@ Terminal client for [MPD](../mpd/README.md), with album art, a queue and an
 embedded Cava visualizer. Install `rmpc` and `cava`, and link this directory
 using the [repository setup](../../README.md).
 
+## macOS setup
+
+The [Brewfile](../../Brewfile) installs `rmpc` and `cava`; link this directory with
+Stow. The rmpc config files are identical on `nixos`: both use `/tmp/mpd_socket`
+and `/tmp/mpd.fifo`. MPD handles the platform-specific audio output through
+CoreAudio here, while rmpc keeps the same client and visualizer settings.
+
 ## Configuration
 
 [config.ron](config.ron) is the main config; [config.debug.ron](config.debug.ron)
