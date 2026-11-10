@@ -1,5 +1,6 @@
 def welcome [] {
-  let image_path = $"($env.HOME)/dotfiles/assets/profile-pictures/Asuka.png"
+  let image_path = (path self | path expand | path dirname
+    | path join "../../assets/profile-pictures/asuka-2026.png" | path expand)
 
   # Gather info
   let ver = (version)
@@ -12,19 +13,19 @@ def welcome [] {
   let uptime = (sys host | get uptime)
   let mem_used = (sys mem | get used)
   let mem_total = (sys mem | get total)
-  let term = ($env.TERM)
+  let term = ($env.TERM? | default "unknown")
   let after_init = (date now)
   # TODO: when works fine fix the startup time
   let startup = $nu.startup-time
 
   # Image + Text Layout
-  if ($image_path | path exists) {
+  if $term == "xterm-kitty" and (which kitty | is-not-empty) and ($image_path | path exists) {
     run-external kitty '+kitten' 'icat' '--align=left' '--stdin=no' '--silent' '--scale-up' '--place=40x14@5x2' $image_path
 
     print "\u{1b}[2A"
 
     echo $"
-                                     (ansi green_bold)Welcome, Minion 👾(ansi reset)
+                                     (ansi green_bold)Welcome, ($user) 👾(ansi reset)
                                      ───────────────────────────────
                                      (ansi green)User:      (ansi purple)($user)
                                      (ansi green)Host:      (ansi purple)($hostname)
@@ -41,7 +42,7 @@ def welcome [] {
     "
   } else {
     echo $"
-  (ansi green_bold)Welcome, Minion 👾(ansi reset)
+  (ansi green_bold)Welcome, ($user) 👾(ansi reset)
   ───────────────────────────────
   (ansi green)User:      (ansi purple)($user)
   (ansi green)Host:      (ansi purple)($hostname)

@@ -1,7 +1,7 @@
 return {
 	{
 		"mrcjkb/rustaceanvim",
-		version = "^6",
+		version = "^9",
 		ft = { "rust" },
 		lazy = false,
 	},

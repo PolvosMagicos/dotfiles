@@ -2,7 +2,7 @@ return {
 	name = "html",
 	config = {
 		cmd = { "vscode-html-language-server", "--stdio" },
-		filetypes = { "html" },
+		filetypes = { "html", "isml" },
 		root_markers = { "package.json", ".git" },
 	},
 }

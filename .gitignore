@@ -7,3 +7,7 @@
 .config/mpd/pid
 .config/mpd/state
 .config/mpd/socket
+
+# Local editor logs
+nvim.log
+__pycache__/

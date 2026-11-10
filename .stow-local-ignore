@@ -13,6 +13,8 @@ _darcs
 
 \.git
 \.gitignore
+\.gitmodules
+^/\.(agents|aws|codex)$
 
 .+~          # emacs backup files
 \#.*\#       # emacs autosave files
@@ -23,3 +25,13 @@ _darcs
 
 /assets
 /firefox
+/vial-layouts
+/scripts
+/tests
+^/Brewfile$
+old(config|env)-.*\.nu
+.*\.save
+nvim\.log
+\.DS_Store
+^/\.config/mpd/(database|log|pid|state|socket)(/.*)?$
+^/\.config/(quickshell|niri|fuzzel|containers|systemd)(/.*)?$

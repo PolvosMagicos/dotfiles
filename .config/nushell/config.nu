@@ -1,101 +1,51 @@
 # config.nu
 #
 # Installed by:
-# version = "0.104.0"
+# version = "0.111.0"
 #
 # This file is used to override default Nushell settings, define
 # (or import) custom commands, or run any other startup tasks.
 # See https://www.nushell.sh/book/configuration.html
 #
-# This file is loaded after env.nu and before login.nu
+# Nushell sets "sensible defaults" for most configuration settings,
+# so your `config.nu` only needs to override these defaults if desired.
 #
 # You can open this file in your default editor using:
-# config nu
+#     config nu
 #
-# See `help config nu` for more options
-# You can remove these comments if you want or leave
-# them for future reference.
+# You can also pretty-print and page through the documentation for configuration
+# options using:
+#     config nu --doc | nu-highlight | less -R
 
-# config.nu (macOS)
-# Nushell config loaded after env.nu and before login.nu
+# Imports
+use ~/.config/nushell/scripts/esp-commands.nu *
 
 # -------------------------
 # Helpers
 # -------------------------
 def --env add_path [p: string] {
-  if ($p | path exists) {
-    if not ($env.PATH | any {|e| $e == $p }) {
-      $env.PATH = ($env.PATH | prepend $p)
-    }
+  let p = ($p | into string)
+
+  # Ensure PATH is a list
+  if ($env.PATH | describe) !~ 'list' {
+    $env.PATH = ($env.PATH | split row (char esep))
+  }
+
+  # Only add if it exists and isn't already present
+  if ($p | path exists) and (not ($env.PATH | any {|e| $e == $p })) {
+    $env.PATH = ($env.PATH | prepend $p)
   }
 }
 
-# -------------------------
-# PATH (macOS / Homebrew-first)
-# -------------------------
-# Start from current PATH and ensure it's a list
-$env.PATH = ($env.PATH | split row (char esep))
-
-# Homebrew (Apple Silicon)
-add_path "/opt/homebrew/bin"
-add_path "/opt/homebrew/sbin"
-
-# Homebrew (Intel fallback)
-add_path "/usr/local/bin"
-add_path "/usr/local/sbin"
-
-# Common user bins
-add_path ($env.HOME | path join ".local" "bin")
-add_path ($env.HOME | path join "bin")
-
-# Cargo (Rust)
-add_path ($env.HOME | path join ".cargo" "bin")
-
-# Bun
-$env.BUN_INSTALL = ($env.HOME | path join ".bun")
-add_path ($env.BUN_INSTALL | path join "bin")
-
-# Yarn global bins (your original idea)
-let yarn_bins = [
-  ($env.HOME | path join ".yarn" "bin")
-  ($env.HOME | path join ".config" "yarn" "global" "node_modules" ".bin")
-]
-for p in $yarn_bins { add_path $p }
-
-# De-duplicate PATH
-$env.PATH = ($env.PATH | uniq)
-
-# -------------------------
-# fnm (Fast Node Manager)
-# -------------------------
-# Load fnm environment (without letting it overwrite PATH)
-# If you want fnm to manage PATH, remove the `where name != "PATH"` filter.
-load-env (fnm env --shell bash
-  | lines
-  | str replace 'export ' ''
-  | str replace -a '"' ''
-  | split column "="
-  | rename name value
-  | where name != "FNM_ARCH" and name != "PATH"
-  | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
+# Ensure PATH is a list early
+$env.PATH = (
+  if ($env.PATH | describe) =~ 'list' {
+    $env.PATH
+  } else {
+    $env.PATH | split row (char esep)
+  }
 )
 
-# Make sure fnm's active Node is on PATH
-if ($env.FNM_MULTISHELL_PATH? | is-not-empty) {
-  add_path ($env.FNM_MULTISHELL_PATH | path join "bin")
-} else {
-  print "fnm: FNM_MULTISHELL_PATH not set (is fnm installed and available?)"
-}
-
-# -------------------------
-# zoxide (cd replacement)
-# -------------------------
-
-zoxide init --cmd cd nushell | save -f ~/.zoxide.nu
-
-source ~/.zoxide.nu
-
-# zoxide (generate init script)
 
 # -------------------------
 # Yazi wrapper (cd into last dir)
@@ -110,6 +60,104 @@ def --env y [...args] {
   rm -fp $tmp
 }
 
+
+# -------------------------
+# Zoxide (cd with steroids)
+# -------------------------
+source ~/.zoxide.nu
+
+# -------------------------
+# Yarn global bins
+# -------------------------
+let yarn_bins = [
+  ($env.HOME | path join ".yarn" "bin")
+  ($env.HOME | path join ".config" "yarn" "global" "node_modules" ".bin")
+]
+for p in $yarn_bins { add_path $p }
+
+# -------------------------
+# fnm (Fast Node Manager)
+# -------------------------
+# Load fnm environment (without letting it overwrite PATH)
+load-env (fnm env --shell bash
+  | lines
+  | str replace 'export ' ''
+  | str replace -a '"' ''
+  | split column "="
+  | rename name value
+  | where name != "FNM_ARCH" and name != "PATH"
+  | reduce -f {} {|it, acc| $acc | upsert $it.name $it.value }
+)
+
+# Ensure fnm's active Node is on PATH (when available)
+if ($env.FNM_MULTISHELL_PATH? | is-not-empty) {
+  add_path ($env.FNM_MULTISHELL_PATH | path join "bin")
+}
+
+# Optional: some setups also use this location (added only if it exists)
+add_path ($env.HOME | path join ".local" "share" "fnm")
+
+# -------------------------
+# Java (registered macOS JDKs)
+# -------------------------
+if ($env.JAVA_HOME? | is-empty) and ("/usr/libexec/java_home" | path exists) {
+  let java_home = (^/usr/libexec/java_home | complete)
+  if $java_home.exit_code == 0 {
+    $env.JAVA_HOME = ($java_home.stdout | str trim)
+  }
+}
+if ($env.JAVA_HOME? | is-not-empty) {
+  add_path ($env.JAVA_HOME | path join "bin")
+}
+
+# -------------------------
+# Android SDK
+# -------------------------
+if ($env.ANDROID_HOME? | is-empty) {
+  $env.ANDROID_HOME = ($env.HOME | path join "Library" "Android" "sdk")
+  if not ($env.ANDROID_HOME | path exists) and ($env.HOMEBREW_PREFIX? | is-not-empty) {
+    $env.ANDROID_HOME = ($env.HOMEBREW_PREFIX | path join "share" "android-commandlinetools")
+  }
+}
+
+$env.ANDROID_SDK_ROOT = $env.ANDROID_HOME
+
+add_path (
+  $env.ANDROID_HOME
+  | path join "cmdline-tools" "latest" "bin"
+)
+
+add_path (
+  $env.ANDROID_HOME
+  | path join "platform-tools"
+)
+
+add_path (
+  $env.ANDROID_HOME
+  | path join "emulator"
+)
+
+# -------------------------
+# Flutter
+# -------------------------
+add_path ($env.HOME | path join "flutter" "bin")
+
+# -------------------------
+# Common user/tool bins
+# -------------------------
+add_path ($env.HOME | path join ".local" "bin")
+add_path ($env.HOME | path join "bin")
+add_path ($env.HOME | path join ".cargo" "bin")
+
+# Bun
+$env.BUN_INSTALL = ($env.HOME | path join ".bun")
+add_path ($env.BUN_INSTALL | path join "bin")
+
+# -------------------------
+# De-duplicate PATH
+# -------------------------
+$env.PATH = ($env.PATH | uniq)
+
 # -------------------------
 # Editor defaults
 # -------------------------
@@ -121,6 +169,5 @@ $env.VISUAL = "nvim"
 # -------------------------
 alias pls = sudo
 
-# Jupyter (using login shell so it picks up pyenv/conda/etc if you use them)
 alias jb = ^bash -lc "jupyter notebook"
 alias jl = ^bash -lc "jupyter lab"
