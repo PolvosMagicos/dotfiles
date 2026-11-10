@@ -23,6 +23,21 @@ Shared application configs live in [`.config/`](.config). This branch excludes
 Quickshell, Niri, Fuzzel, systemd services, Linux container settings, Nix commands
 and the QML/Nix desktop editor tooling.
 
+## Configuration guides
+
+Each config has its own setup, dependencies and usage notes:
+
+| Config | Guide |
+| --- | --- |
+| [cava](.config/cava/README.md) | Standalone audio visualizer |
+| [kitty](.config/kitty/README.md) | Terminal, font, shell and background |
+| [mpd](.config/mpd/README.md) | Local music server and visualizer FIFO |
+| [mpv](.config/mpv/README.md) | Video rendering and playback |
+| [nushell](.config/nushell/README.md) | Shell startup, paths and helper commands |
+| [nvim](.config/nvim/README.md) | Editor plugins, language tools and shortcuts |
+| [rmpc](.config/rmpc/README.md) | Music client and embedded visualizer |
+| [yazi](.config/yazi/README.md) | File manager, plugins and archive shortcuts |
+
 ## Install dependencies
 
 Install Apple's Command Line Tools (`xcode-select --install`) and
