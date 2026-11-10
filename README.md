@@ -24,6 +24,26 @@ and screenshots live in [`assets/`](assets), keyboard exports in
 [`vial-layouts/`](vial-layouts), and retired configurations in
 [`deprecated/`](deprecated).
 
+## Configuration guides
+
+Each config has its own setup, dependencies and usage notes:
+
+| Config | Guide |
+| --- | --- |
+| [cava](.config/cava/README.md) | Standalone audio visualizer |
+| [containers](.config/containers/README.md) | Podman registry and image-signature policy |
+| [fuzzel](.config/fuzzel/README.md) | Wayland application launcher |
+| [kitty](.config/kitty/README.md) | Terminal, font, shell and background |
+| [mpd](.config/mpd/README.md) | Local music server and visualizer FIFO |
+| [mpv](.config/mpv/README.md) | Video rendering and playback |
+| [niri](.config/niri/README.md) | Desktop outputs, layout and shortcuts |
+| [nushell](.config/nushell/README.md) | Shell startup, paths and helper commands |
+| [nvim](.config/nvim/README.md) | Editor plugins, language tools and shortcuts |
+| [quickshell](.config/quickshell/README.md) | Desktop bar, wallpaper and device controls |
+| [rmpc](.config/rmpc/README.md) | Music client and embedded visualizer |
+| [systemd](.config/systemd/README.md) | Saved MPD user service and portability notes |
+| [yazi](.config/yazi/README.md) | File manager, plugins and archive shortcuts |
+
 ## Setup
 
 Clone this branch to the path used by the shell banner, Kitty backgrounds and
