@@ -9,6 +9,11 @@ The [Brewfile](../../Brewfile) installs Neovim, language servers, formatters
 and build tools. Apple's Command Line Tools supply `make`, a C compiler and
 `clangd`. Follow the repository's Stow setup to link `~/.config/nvim`.
 
+On macOS, Homebrew manages those executables and `lazy.nvim` manages editor
+plugins. Mason is archived and does not install language servers. Server
+definitions resolve commands from Neovim's `PATH`; the tables below list command
+names, which can differ from Homebrew formula names.
+
 Use Neovim 0.12 or newer for the plugin stack documented by this repository.
 Install the external commands for the features you use:
 
@@ -50,7 +55,6 @@ provider (`wl-clipboard` in a Wayland session, or macOS clipboard tools).
 
 [lsp-config.lua](lua/polvos-magicos/plugins/lsp/lsp-config.lua) loads each Lua file
 in `servers/`, defines it with `vim.lsp.config`, and enables it with `vim.lsp.enable`.
-Mason is archived; it does not install servers for this setup.
 
 | Language | Command or integration |
 | --- | --- |
