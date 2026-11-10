@@ -39,6 +39,8 @@ expects your own `~/export-esp.sh`. The `jb`/`jl` aliases expect Jupyter in your
 Python environment. Vial is installed separately from
 [its releases](https://github.com/vial-kb/vial-gui/releases); its Homebrew cask is
 currently disabled. Import the keyboard layouts from `vial-layouts/` manually.
+The `nixos` and `macos` branches share the updated `vial-layouts/colemak.vil`
+profile; load it in Vial to apply the Colemak mapping to the keyboard.
 
 ## Link configs
 
