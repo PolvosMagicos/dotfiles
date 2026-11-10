@@ -28,9 +28,9 @@ This repo bundles my everyday terminal, editor, shell, file manager, music, and 
 │   ├── nvim/
 │   ├── rmpc/
 │   ├── systemd/
-│   ├── vial-layouts/
 │   └── yazi/
 ├── assets/
+├── vial-layouts/
 └── deprecated/
     ├── .local/
     └── firefox/
@@ -150,7 +150,9 @@ This repo includes:
 
 ### Keyboard layouts
 
-Vial layout files are stored in `.config/vial-layouts/`.
+Vial layout files are stored in `vial-layouts/`. On both the `nixos` and `macos`
+branches, load `vial-layouts/colemak.vil` in Vial to apply the Colemak profile to
+the keyboard.
 
 ## Assets and deprecated files
 
