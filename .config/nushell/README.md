@@ -48,11 +48,16 @@ and `~/.zoxide.nu` are generated locally.
 
 ## NixOS paths and commands
 
-Java is discovered by resolving the `javac` executable. Android is set to
-`~/Android/Sdk`, Flutter is looked up under `~/flutter`, and the config sets
+Java is discovered by resolving the `javac` executable, assigning `JAVA_HOME`
+when it is found. Android is assigned `~/Android/Sdk`; unlike the macOS branch,
+these assignments do not preserve existing SDK environment overrides.
+Flutter is looked up under `~/flutter`, and the config sets
 `CHROME_EXECUTABLE` to `/usr/bin/chromium-browser`. Adjust these paths when your
 tools live elsewhere. The banner's image is under `~/dotfiles/assets` and uses
-Kitty's image helper.
+Kitty's image helper. `env.nu` calls the banner without the macOS branch's
+interactive-session and Kitty availability checks. Tools such as zoxide and fnm
+must be on the Nix-provided PATH before startup; this branch does not perform
+the macOS branch's early Homebrew initialization.
 
 [scripts/nixos-commands.nu](scripts/nixos-commands.nu) targets the personal flake
 `~/nixos-config#nixos-btw`:

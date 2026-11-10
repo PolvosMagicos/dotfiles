@@ -5,6 +5,10 @@ Follow the [repository setup](../../README.md) to install and link the config.
 
 ## Dependencies and plugins
 
+Install Yazi, archive commands and preview tools through Nix, and link this
+directory with Home Manager. The archive shortcuts match `macos`; its Homebrew
+setup and archive submodule initialization differ from this branch.
+
 This branch includes a checked-in mount plugin and a Git link for
 `compress.yazi`. The archive plugin has no `.gitmodules` entry on this branch.
 If its directory is empty in a fresh checkout, clone it separately and select

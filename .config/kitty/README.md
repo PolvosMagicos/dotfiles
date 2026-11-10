@@ -8,6 +8,8 @@ for installation and linking.
 
 Install `kitty`, `nushell`, `neovim` and JetBrainsMono Nerd Font through Nix.
 Home Manager links this directory to `~/.config/kitty`.
+`shell nu` uses the Nix-provided PATH. The additional Homebrew executable search
+paths in the macOS config are absent here; the font and background settings match.
 
 The background image is read from
 `~/dotfiles/assets/wallpapers/Shinji-and-Kaworu-colorized-cropped.png`.

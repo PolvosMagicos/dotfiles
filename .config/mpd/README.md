@@ -7,8 +7,10 @@ See the [repository setup](../../README.md) for config linking.
 ## Platform setup
 
 The audio output is `pulse`; it needs a PulseAudio server or PipeWire with
-PulseAudio compatibility. Install `mpd` separately if your Nix configuration
-does not provide it. The saved [systemd unit](../systemd/README.md) needs
+PulseAudio compatibility. Install `mpd` through Nix if your package configuration
+does not provide it, and link the config with Home Manager. The macOS branch
+uses CoreAudio instead; the socket and visualizer FIFO paths match.
+The saved [systemd unit](../systemd/README.md) needs
 NixOS-specific adaptation before use.
 
 ## Paths and outputs

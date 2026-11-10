@@ -4,6 +4,13 @@ Terminal client for [MPD](../mpd/README.md), with album art, a queue and an
 embedded Cava visualizer. Install `rmpc` and `cava`, and link this directory
 using the [repository setup](../../README.md).
 
+## NixOS setup
+
+Install `rmpc` and `cava` through Nix and link this directory with Home Manager.
+The rmpc config files are identical on `macos`: both use `/tmp/mpd_socket` and
+`/tmp/mpd.fifo`. The platform-specific audio output is configured in MPD;
+this branch uses its `pulse` output for PulseAudio/PipeWire compatibility.
+
 ## Configuration
 
 [config.ron](config.ron) is the main config; [config.debug.ron](config.debug.ron)

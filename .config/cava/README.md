@@ -3,6 +3,14 @@
 Standalone terminal audio visualizer. See the [repository setup](../../README.md)
 for package installation and config linking.
 
+## NixOS setup
+
+Install `cava` through Nix and link this directory with Home Manager. The config
+leaves audio capture unset, so the backend is selected by the installed build.
+Choose an available input backend/source that matches your Linux audio server
+if the defaults do not capture it. The file itself is identical on `macos`;
+its runtime capture backend can differ.
+
 ## Configuration
 
 [config](config) is a commented reference configuration: only section headers
@@ -17,8 +25,7 @@ cava
 ```
 
 Choose the capture backend and source in the `[input]` section if the default
-is silent. Available backends depend on the installed Cava build. On macOS,
-capturing system output can require a loopback device.
+is silent. Available backends depend on the installed Cava build.
 
 ## Relationship to the music setup
 
