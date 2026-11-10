@@ -80,7 +80,8 @@ Homebrew may still update dependencies required by a new package. It works with
 Homebrew on Apple Silicon and Intel, and also accepts `brew` already on `PATH`.
 It does not link configs or start services.
 
-The Brewfile includes terminal apps, shell tools, Neovim's configured language
+The Brewfile includes Claude Code (`claude`), Codex CLI (`codex`), terminal apps,
+shell tools, Neovim's configured language
 servers and formatters, Rust, Yazi's preview/archive tools, music/video players,
 Java 17, Android command-line tools and Flutter. Apple's tools provide `make`,
 the C compiler and `clangd`. Neovim requires 0.12 or newer; Lazy restores the

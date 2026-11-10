@@ -17,6 +17,10 @@ brew "tree-sitter-cli"
 cask "kitty"
 cask "font-jetbrains-mono-nerd-font"
 
+# AI coding CLIs
+cask "claude-code"
+cask "codex"
+
 # Neovim language servers and formatters (managed by brew instead of Mason)
 brew "lua-language-server"
 brew "marksman"
