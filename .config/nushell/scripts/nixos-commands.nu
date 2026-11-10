@@ -13,6 +13,7 @@ export def ntest [] {
 export def nupdate [] {
   cd ~/nixos-config
   nix flake update
+  nix run .#update-github-releases
   sudo nixos-rebuild switch --flake ~/nixos-config#nixos-btw
 }
 
