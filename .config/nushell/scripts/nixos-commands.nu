@@ -17,5 +17,7 @@ export def nupdate [] {
 }
 
 export def nclean [] {
-  sudo nix-collect-garbage -d
+  do --capture-errors { sudo nix-env --profile /nix/var/nix/profiles/system --delete-generations +5 }
+  do --capture-errors { sudo /nix/var/nix/profiles/system/bin/switch-to-configuration boot }
+  do --capture-errors { sudo nix-store --gc }
 }

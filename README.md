@@ -124,7 +124,7 @@ There are also NixOS helper commands under `~/.config/nushell/scripts/nixos-comm
 - `nboot` → `nixos-rebuild boot`
 - `ntest` → `nixos-rebuild test`
 - `nupdate` → flake update + rebuild
-- `nclean` → garbage collection
+- `nclean` → keep five system generations, refresh Limine, and collect unreferenced Nix data (also preserves newer generations after a rollback)
 
 ### Neovim
 
