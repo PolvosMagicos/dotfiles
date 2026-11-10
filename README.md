@@ -1,183 +1,134 @@
-# dotfiles
+# NixOS dotfiles
 
-Personal Linux-first dotfiles managed with **GNU Stow**.
+Personal terminal, editor and Wayland desktop configuration for NixOS.
 
-This repo bundles my everyday terminal, editor, shell, file manager, music, and keyboard setup. The main stack currently includes:
-
-- **Nushell** for shell configuration and helper commands
-- **Neovim** with Lazy-based plugin management
-- **Kitty** as the terminal emulator
-- **Yazi** for terminal file management
-- **MPD + rmpc + cava** for local music playback and visualization
-- **systemd user units** for user-level services
-- **Vial layouts** for keyboard mappings
-- local **assets** such as wallpapers and profile pictures
+Branches: **nixos** · [macos](https://github.com/PolvosMagicos/dotfiles/tree/macos)
+(Homebrew and Stow setup).
 
 ![Terminal screenshot](assets/screenshots/terminal.png)
 ![Neovim screenshot](assets/screenshots/neovim.png)
 
-## Structure
+## What's included
+
+| Area | Configuration |
+| --- | --- |
+| Desktop | Niri, Quickshell bar and wallpaper, Fuzzel launcher |
+| Terminal and shell | Kitty, JetBrainsMono Nerd Font, Nushell, zoxide and fnm |
+| Editor | Neovim, Lazy, Catppuccin, Tree-sitter, Telescope and language servers |
+| Files and containers | Yazi and Podman registry/policy settings |
+| Media | MPV, MPD, rmpc and Cava |
+| Keyboard | Vial Colemak and QWERTY exports |
+
+Application settings live in [`.config/`](.config). Wallpapers, profile pictures
+and screenshots live in [`assets/`](assets), keyboard exports in
+[`vial-layouts/`](vial-layouts), and retired configurations in
+[`deprecated/`](deprecated).
+
+## Setup
+
+Clone this branch to the path used by the shell banner, Kitty backgrounds and
+the companion Home Manager configuration:
+
+```bash
+git clone --branch nixos https://github.com/PolvosMagicos/dotfiles.git ~/dotfiles
+```
+
+Packages, hardware configuration and Home Manager integration live in
+[`nixos-config`](https://github.com/PolvosMagicos/nixos-config).
+Its [`home/xdg.nix`](https://github.com/PolvosMagicos/nixos-config/blob/HEAD/home/xdg.nix)
+uses `mkOutOfStoreSymlink` to link these directories from `~/dotfiles/.config`
+into `~/.config`:
 
 ```text
-.
-├── .config/
-│   ├── cava/
-│   ├── kitty/
-│   ├── mpd/
-│   ├── nushell/
-│   ├── nvim/
-│   ├── rmpc/
-│   ├── systemd/
-│   └── yazi/
-├── assets/
-├── vial-layouts/
-└── deprecated/
-    ├── .local/
-    └── firefox/
+cava  containers  fuzzel  kitty  mpd  mpv  nushell  nvim  rmpc  yazi  niri  quickshell
 ```
 
-## Requirements
-
-At minimum, install:
-
-- `git`
-- `stow`
-
-Depending on what parts of the repo you want to use, you may also want:
-
-- `nushell`
-- `neovim`
-- `kitty`
-- `yazi`
-- `mpd`
-- `rmpc`
-- `cava`
-- `zoxide`
-- `fnm`
-- `bun`
-- `sdkman`
-- `flutter`
-- `ripgrep`
-- `fzf`
-- `make`
-- `lazygit`
-- `atac`
-- `vial`
-
-## Installation
-
-Clone the repo into your home directory so Stow can manage it as a package:
+Back up conflicting configs before activating Home Manager. If you already use
+the companion configuration at `~/nixos-config`, apply it with:
 
 ```bash
-git clone git@github.com:PolvosMagicos/dotfiles.git ~/dotfiles
-cd ~
-stow dotfiles
+sudo nixos-rebuild switch --flake ~/nixos-config#nixos-btw
 ```
 
-If you want to preview what Stow will do first:
+That flake is specific to the `nixos-btw` machine. Adapt its user, hardware and
+host settings before using it elsewhere. Use Home Manager for links on NixOS.
+
+Install the applications you use through Nix. Nushell calls `zoxide` and `fnm`
+during startup, and Kitty launches `nu`. Neovim also needs the language servers,
+formatters and build tools referenced in its plugin configuration; Lazy manages
+plugins, while Tree-sitter installs parsers when its CLI is available.
+
+## Desktop
+
+[Niri](.config/niri/config.kdl) starts Quickshell and provides these shortcuts:
+
+| Shortcut | Action |
+| --- | --- |
+| `Mod+T` | Open Kitty |
+| `Mod+D` | Open Fuzzel |
+| `Super+Alt+L` | Lock with swaylock |
+| `Mod+Shift+T` | Capture text with NormCap |
+
+[Quickshell](.config/quickshell) supplies the bar, workspaces, hardware monitors,
+notifications, Bluetooth and audio controls. The companion configuration adds
+the QML Niri and Qt Multimedia modules. Review Niri's output names, resolutions
+and startup monitor, plus the absolute wallpaper path in
+[`Wallpaper.qml`](.config/quickshell/layout/Wallpaper.qml), for your machine.
+
+## Shell and editor
+
+[Nushell](.config/nushell) includes the `y` wrapper to follow Yazi's last directory,
+zoxide navigation, fnm initialization, Java discovery and Android/Flutter paths.
+The Android SDK defaults to `~/Android/Sdk`, Flutter to `~/flutter`, and
+`esp-env` expects your own `~/export-esp.sh`. The `jb` and `jl` aliases require
+Jupyter in your Python environment.
+
+The [NixOS commands](.config/nushell/scripts/nixos-commands.nu) target
+`~/nixos-config#nixos-btw`:
+
+| Command | Action |
+| --- | --- |
+| `nsw` | Build and switch to the system configuration |
+| `nboot` | Build the configuration for the next boot |
+| `ntest` | Activate the configuration for testing |
+| `nupdate` | Update flake inputs, update pinned GitHub releases, then rebuild and switch |
+| `nclean` | Keep five system generations, refresh boot entries and collect unreferenced Nix data |
+
+`nclean` also preserves generations newer than the active one after a rollback.
+It removes older generations, so use it when those rollback points are no longer
+needed.
+
+[Neovim](.config/nvim) keeps plugins under `lua/polvos-magicos/plugins`, native
+language server definitions under `plugins/lsp/servers`, and plugin revisions
+in `lazy-lock.json`. It includes TypeScript, Rust, Flutter, QML/Nix tooling,
+formatting on save and ISML filetype support.
+
+Yazi's archive shortcuts use `compress.yazi`. This branch records that plugin as
+a Git link without a `.gitmodules` entry, so a fresh clone needs it installed
+separately. The mount plugin is listed in [Yazi's package file](.config/yazi/package.toml).
+
+## Optional music setup
+
+MPD reads `~/Music`, listens on `/tmp/mpd_socket`, and sends audio to PulseAudio
+and `/tmp/mpd.fifo`. rmpc uses that FIFO for its Cava visualizer. After installing
+`mpd`, `rmpc` and `cava`, create the runtime directories and start playback:
 
 ```bash
-stow -nv dotfiles
+mkdir -p ~/.config/mpd/{playlists,database,log,state}
+mpd ~/.config/mpd/mpd.conf
+rmpc
 ```
 
-To remove the symlinks later:
+The checked-in [systemd user unit](.config/systemd/user/mpd.service) uses
+`/usr/bin/mpd` and is outside the companion Home Manager link list. Define a
+service with the Nix package path before enabling it on NixOS.
 
-```bash
-cd ~
-stow -D dotfiles
-```
+## Keyboard and local data
 
-## What gets stowed
+Load [`vial-layouts/colemak.vil`](vial-layouts/colemak.vil) in Vial to apply the
+Colemak profile shared with `macos`. A QWERTY export is also included. Layouts,
+assets and deprecated files stay in the checkout and are used manually.
 
-The repo is set up so the package root is the repository itself. Running `stow dotfiles` from your home directory will symlink files like:
-
-- `~/dotfiles/.config/nvim` -> `~/.config/nvim`
-- `~/dotfiles/.config/kitty` -> `~/.config/kitty`
-- `~/dotfiles/.config/nushell` -> `~/.config/nushell`
-- `~/dotfiles/.config/yazi` -> `~/.config/yazi`
-
-Some paths are intentionally excluded through `.stow-local-ignore`, including:
-
-- `.git`
-- `.gitignore`
-- `README*`
-- `assets/`
-- `deprecated/`
-
-Those folders are meant to stay in the repo and be used manually, if at all.
-
-## Notable configs
-
-### Nushell
-
-The Nushell setup includes:
-
-- custom PATH bootstrapping helpers
-- `zoxide` integration
-- `yazi` wrapper to `cd` into the last visited directory
-- `fnm`, Bun, Java, Android SDK, Flutter, Cargo, and common user bin paths
-- a custom banner loaded from `env.nu`
-
-There are also NixOS helper commands under `~/.config/nushell/scripts/nixos-commands.nu`:
-
-- `nsw` → `nixos-rebuild switch`
-- `nboot` → `nixos-rebuild boot`
-- `ntest` → `nixos-rebuild test`
-- `nupdate` → flake update + rebuild
-- `nclean` → keep five system generations, refresh Limine, and collect unreferenced Nix data (also preserves newer generations after a rollback)
-
-### Neovim
-
-The Neovim config is organized under `lua/polvos-magicos` and includes:
-
-- Catppuccin theme
-- Treesitter
-- Telescope and extensions
-- ToggleTerm
-- Yanky
-- Todo Comments
-- TypeScript tools
-- custom ISML filetype registration
-
-### MPD stack
-
-This repo includes:
-
-- `mpd` config and state paths
-- `rmpc` config
-- a `systemd --user` unit for MPD
-- `cava` config and shaders
-
-### Keyboard layouts
-
-Vial layout files are stored in `vial-layouts/`. On both the `nixos` and `macos`
-branches, load `vial-layouts/colemak.vil` in Vial to apply the Colemak profile to
-the keyboard.
-
-## Assets and deprecated files
-
-The `assets/` and `deprecated/` directories are not managed by Stow.
-
-- `assets/` contains wallpapers and profile pictures
-- `deprecated/` contains old files I no longer actively use, including previous `.local` entries and Firefox customization files
-
-Keep them in the repo for reference, or copy from them manually only if needed.
-
-## Machine-specific files
-
-A few files in the repo are naturally machine-generated or machine-specific, such as:
-
-- `.config/nushell/history.txt`
-- `.config/nushell/oldconfig-*`
-- `.config/nushell/oldenv-*`
-- `.config/mpd/database/`
-- `.config/mpd/log/`
-- `.config/mpd/pid`
-- `.config/mpd/state/`
-- desktop entries stored under `deprecated/.local/share/applications/`
-
-Some generated MPD and Nushell files are already ignored in `.gitignore`, but you may still want to prune or sanitize machine-specific data before sharing the repo publicly.
-
-## Platform notes
-
-This setup is primarily tailored for Linux, with some paths that also make room for macOS/Homebrew. A few commands are specifically NixOS-oriented, if it's cloned on NixOS, stow should be replaced by declarative symlinks on `home.nix`.
+Nushell history and most MPD runtime files are covered by [`.gitignore`](.gitignore).
+The existing MPD database is tracked, as are shell backup files, so review their
+contents before committing local changes.
