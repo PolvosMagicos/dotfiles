@@ -21,6 +21,8 @@ cask "font-jetbrains-mono-nerd-font"
 # AI coding CLIs
 cask "claude-code"
 cask "codex"
+cask "copilot-cli"
+cask "antigravity-cli"
 
 # Neovim language servers and formatters (managed by brew instead of Mason)
 brew "lua-language-server"
