@@ -1,6 +1,10 @@
+# `path self` only works at parse time, so resolve the image path in a const.
+# `path expand` follows the Stow symlink back into the repo checkout.
+const banner_image = (path self | path expand | path dirname
+  | path join "../../assets/profile-pictures/asuka-2026.png" | path expand)
+
 def welcome [] {
-  let image_path = (path self | path expand | path dirname
-    | path join "../../assets/profile-pictures/asuka-2026.png" | path expand)
+  let image_path = $banner_image
 
   # Gather info
   let ver = (version)
