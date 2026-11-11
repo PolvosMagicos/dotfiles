@@ -32,7 +32,7 @@ cover the setup and machine-specific paths for each config.
 | --- | --- | --- |
 | Packages and config links | Nix packages; Home Manager links application configs | Homebrew/Brewfile; Stow with `--no-folding` |
 | Nushell config location | `~/.config/nushell` | Native Application Support directory linked to `~/.config/nushell` |
-| Nushell development paths | Java resolved from `javac`; Android set to `~/Android/Sdk` | Registered macOS JDK discovery; preserves `JAVA_HOME`/`ANDROID_HOME`; Android SDK or Homebrew fallback |
+| Nushell development paths | Java resolved from `javac`; Android set to `~/Android/Sdk` | Registered macOS JDK discovery; preserves `JAVA_HOME`/`ANDROID_HOME`; Android SDK or Homebrew fallback; installer adds SDK packages and a `Pixel_API_36` emulator |
 | Nushell startup and helpers | Nix rebuild/update/cleanup commands; banner called by `env.nu` | Homebrew PATH initialized first; interactive banner with Kitty checks; no Nix helpers |
 | Kitty | `nu` resolved from the Nix-provided PATH | Adds Apple Silicon and Intel Homebrew executable search paths |
 | MPD | `pulse` output for PulseAudio/PipeWire compatibility; saved systemd unit needs adaptation | `osx` output for CoreAudio; installer starts no service |
@@ -80,6 +80,23 @@ Homebrew may still update dependencies required by a new package. It works with
 Homebrew on Apple Silicon and Intel, and also accepts `brew` already on `PATH`.
 It does not link configs or start services.
 
+After `brew bundle`, the script sets up the Android SDK in `ANDROID_HOME`, which
+it resolves the same way as the Nushell config (see [Link configs](#link-configs)):
+
+1. Runs `sdkmanager --licenses` so you can read and accept the SDK licenses
+   yourself. It skips this once `$ANDROID_HOME/licenses/android-sdk-license` exists.
+2. Installs `platform-tools` (`adb`), `emulator`, `platforms;android-36` and the
+   Apple Silicon `system-images;android-36;google_apis;arm64-v8a` image, skipping
+   packages that are already installed.
+3. Creates a `Pixel_API_36` emulator (`pixel_7` device) from that image unless
+   `emulator -list-avds` already lists it.
+
+Build tools and the NDK are left out: Gradle downloads the versions each project
+needs once the licenses are accepted. Running the script again does not reinstall
+or recreate anything. If this step fails, the script prints a warning and finishes;
+run it again to retry. Set `SKIP_ANDROID_SDK=1` to skip it:
+`SKIP_ANDROID_SDK=1 bash scripts/install-macos.sh`.
+
 The Brewfile includes GitHub CLI (`gh`), Claude Code (`claude`), Codex CLI (`codex`),
 GitHub Copilot CLI (`copilot`), Google Antigravity CLI (`agy`), terminal apps,
 shell tools, Neovim's configured language
@@ -90,8 +107,8 @@ shared plugin lockfile, and Tree-sitter downloads its parsers on first launch.
 Ruff uses its native language server for Python diagnostics, formatting and code
 actions.
 
-Android SDK platforms/build tools, Android license acceptance, Xcode/iOS setup
-and the ESP32 toolchain remain project-specific setup. The `esp-env` command
+Android build tools and NDK versions, Xcode/iOS setup and the ESP32 toolchain
+remain project-specific setup. The `esp-env` command
 expects your own `~/export-esp.sh`. The `jb`/`jl` aliases expect Jupyter in your
 Python environment. Keyboard layout setup is described below.
 
@@ -126,7 +143,9 @@ See the [Nushell setup guide](.config/nushell/README.md) for the manual steps.
 Kitty finds Homebrew's `nu` on either architecture. Nushell initializes Homebrew
 before zoxide and fnm, uses registered macOS JDKs, and preserves an existing
 `JAVA_HOME` or `ANDROID_HOME`. Android defaults to `~/Library/Android/sdk` when
-present, otherwise Homebrew's `share/android-commandlinetools` SDK.
+present, otherwise Homebrew's `share/android-commandlinetools` SDK, and puts the
+SDK's `cmdline-tools/latest/bin`, `platform-tools` and `emulator` on `PATH`. The
+installer uses that same SDK for its Android setup.
 Homebrew's Node works immediately; use `fnm install --lts` and `fnm default lts-latest`
 if you want fnm to manage a separate Node installation.
 
@@ -184,7 +203,7 @@ nvim --headless -u NONE -i NONE -l tests/nvim-check.lua
 brew bundle check --file=Brewfile
 ```
 
-The automated installer and link tests use a fake `brew` and `stow` in a temporary
-home; they do not install packages or touch your configs.
+The automated installer and link tests use a fake `brew`, `stow` and Android SDK
+tools in a temporary home; they do not install packages or touch your configs.
 A real macOS run is still needed to verify package installation, Kitty's GUI,
 audio output and mobile tooling.
