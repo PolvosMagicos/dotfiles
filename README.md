@@ -80,7 +80,7 @@ Homebrew may still update dependencies required by a new package. It works with
 Homebrew on Apple Silicon and Intel, and also accepts `brew` already on `PATH`.
 It does not link configs or start services.
 
-The Brewfile includes Claude Code (`claude`), Codex CLI (`codex`), terminal apps,
+The Brewfile includes GitHub CLI (`gh`), Claude Code (`claude`), Codex CLI (`codex`), terminal apps,
 shell tools, Neovim's configured language
 servers and formatters, Rust, Yazi's preview/archive tools, music/video players,
 Java 17, Android command-line tools and Flutter. Apple's tools provide `make`,

@@ -1,5 +1,6 @@
 # Terminal, shell and editor
 brew "git"
+brew "gh"
 brew "stow"
 brew "nushell"
 brew "neovim"
