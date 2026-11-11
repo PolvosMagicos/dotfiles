@@ -97,23 +97,31 @@ Python environment. Keyboard layout setup is described below.
 
 ## Link configs
 
-Preview and apply the Stow package from your home directory:
+Link the configs into your home directory:
 
 ```bash
-cd ~
-stow -nv --no-folding dotfiles
-stow --no-folding dotfiles
+bash scripts/link-macos.sh
 ```
 
-Move aside any conflicting configs before applying.
+The script handles the whole Stow setup:
+
+1. Installs GNU Stow with Homebrew if it is missing.
+2. Runs `stow --no-folding` for this checkout, wherever it lives. Files in your
+   home directory that would block a link are first moved to
+   `~/.dotfiles-backup/<timestamp>/`, keeping their paths
+   (for example `~/.dotfiles-backup/20261110-202006/.config/kitty/kitty.conf`).
+3. Links Nushell's native macOS config directory,
+   `~/Library/Application Support/nushell`, to `~/.config/nushell`. An existing
+   Nushell directory goes to the same backup folder, and its
+   `history.txt`/`history.sqlite3` are copied over.
+
+Running it again after a successful run changes nothing. To preview the Stow
+step by hand: `cd ~ && stow -nv --no-folding dotfiles`.
 [Stow's ignore file](.stow-local-ignore) excludes the Brewfile, scripts, tests,
 assets, keyboard layout exports, shell backups, and generated MPD state.
 Assets stay in the checkout; the Nushell banner finds its image there.
 Use `--no-folding` so exclusions inside config directories are respected.
-
-Nushell on macOS also needs the native Application Support link. Follow the
-[Nushell setup guide](.config/nushell/README.md), which preserves an existing
-configuration before linking it.
+See the [Nushell setup guide](.config/nushell/README.md) for the manual steps.
 
 Kitty finds Homebrew's `nu` on either architecture. Nushell initializes Homebrew
 before zoxide and fnm, uses registered macOS JDKs, and preserves an existing
@@ -170,12 +178,13 @@ is still tracked by Git; review local data before committing changes.
 Run these from `~/dotfiles` after installing dependencies:
 
 ```bash
-bash -n scripts/install-macos.sh
+bash -n scripts/install-macos.sh scripts/link-macos.sh
 python3 -m unittest discover -s tests -v
 nvim --headless -u NONE -i NONE -l tests/nvim-check.lua
 brew bundle check --file=Brewfile
 ```
 
-The automated installer tests use a fake `brew`; they do not install packages.
+The automated installer and link tests use a fake `brew` and `stow` in a temporary
+home; they do not install packages or touch your configs.
 A real macOS run is still needed to verify package installation, Kitty's GUI,
 audio output and mobile tooling.

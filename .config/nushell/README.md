@@ -6,8 +6,10 @@ fnm and Neovim with the [Brewfile](../../Brewfile), then follow the
 
 ## Native macOS config location
 
-After installing dependencies and linking this repo with Stow, point Nushell's
-native macOS config location to `~/.config/nushell`:
+`scripts/link-macos.sh` does this for you (see the
+[repository setup](../../README.md#link-configs)). To do it by hand after
+installing dependencies and linking this repo with Stow, point Nushell's native
+macOS config location to `~/.config/nushell`:
 
 ```bash
 mkdir -p "$HOME/Library/Application Support"
